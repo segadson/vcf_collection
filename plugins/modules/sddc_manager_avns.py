@@ -22,7 +22,7 @@ import yaml
 def check_avn_current_operation(sddc_manager_ip, sddc_manager_user, sddc_manager_password):
     api_client = SddcManagerApiClient(sddc_manager_ip, sddc_manager_user, sddc_manager_password)
     api_response = api_client.get_avns()
-    payload_data = api_response.data
+    payload_data = api_response['data']
     return payload_data
 
 def create_avns_(sddc_manager_ip, sddc_manager_user, sddc_manager_password, avns_payload):
@@ -30,7 +30,7 @@ def create_avns_(sddc_manager_ip, sddc_manager_user, sddc_manager_password, avns
     try:
         api_client = SddcManagerApiClient(sddc_manager_ip, sddc_manager_user, sddc_manager_password)
         api_response = api_client.create_avns(payload_data)
-        payload_data = api_response.data
+        payload_data = api_response['data']
         return payload_data
     except VcfAPIException as e:
         raise VcfAPIException(f"Error: {e}")
@@ -40,7 +40,7 @@ def validate_avns_(sddc_manager_ip, sddc_manager_user, sddc_manager_password, av
     try:
         api_client = SddcManagerApiClient(sddc_manager_ip, sddc_manager_user, sddc_manager_password)
         api_response = api_client.validate_avns(payload_data)
-        payload_data = api_response.data
+        payload_data = api_response['data']
         return payload_data
     except VcfAPIException as e:
         raise VcfAPIException(f"Error: {e}")

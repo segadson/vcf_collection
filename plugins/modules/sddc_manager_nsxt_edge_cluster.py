@@ -61,75 +61,45 @@ def main():
                 return element
         return None
 
-    """ Check the current state of the Edge Cluster """
-    current_state = get_edge_cluster_by_name(sddc_manager_ip, sddc_manager_user, sddc_manager_password, edge_cluster_payload)
-    api_client = SddcManagerApiClient(sddc_manager_ip, sddc_manager_user, sddc_manager_password)
-
-    state_methods = {
-        ('create', True): api_client.validate_edge_cluster,
-        ('create', False): api_client.create_edge_cluster,
-        ('expand_or_shrink', False): api_client.expand_or_shrink_edge_cluster,
-        ('expand_or_shrink', True): api_client.validate_edge_cluster,
-    }
-
-    if (state, validate) in state_methods:
+    if current_state is None and state == 'create' and validate == True:
         try:
-            if current_state is None and state == 'create':
-                api_response = state_methods[(state, validate)](json.dumps(edge_cluster_payload))
-            elif current_state and state == 'expand_or_shrink':
-                edge_cluster_id = current_state['id']
-                api_response = state_methods[(state, validate)](edge_cluster_id, json.dumps(edge_cluster_payload))
-            else:
-                module.fail_json(msg="Error: Invalid State")
+            api_client = SddcManagerApiClient(sddc_manager_ip, sddc_manager_user, sddc_manager_password)
+            api_response = api_client.validate_edge_cluster(json.dumps(edge_cluster_payload))
             payload_data = api_response.data
             module.exit_json(changed=True, meta=payload_data)
         except VcfAPIException as e:
             module.fail_json(msg=f"Error: {e}")
+
+    elif current_state is None and state == 'create' and validate == False:
+        try:
+            api_client = SddcManagerApiClient(sddc_manager_ip, sddc_manager_user, sddc_manager_password)
+            api_response = api_client.create_edge_cluster(json.dumps(edge_cluster_payload))
+            payload_data = api_response.data
+            module.exit_json(changed=True, meta=payload_data)
+        except VcfAPIException as e:
+            module.fail_json(msg=f"Error: {e}")
+    elif current_state and state == 'expand_or_shrink' and validate == False:
+        edge_cluster_id = current_state['id']
+        try:
+            api_client = SddcManagerApiClient(sddc_manager_ip, sddc_manager_user, sddc_manager_password)
+            api_response = api_client.expand_or_shrink_edge_cluster(edge_cluster_id, json.dumps(edge_cluster_payload))
+            payload_data = api_response.data
+            module.exit_json(changed=True, meta=payload_data)
+        except VcfAPIException as e:
+            module.fail_json(msg=f"Error: {e}")
+
+    elif current_state and state == 'expand_or_shrink' and validate == True:
+        edge_cluster_id = current_state['id']
+        try:
+            api_client = SddcManagerApiClient(sddc_manager_ip, sddc_manager_user, sddc_manager_password)
+            api_response = api_client.validate_edge_cluster(edge_cluster_id, json.dumps(edge_cluster_payload))
+            payload_data = api_response.data
+            module.exit_json(changed=True, meta=payload_data)
+        except VcfAPIException as e:
+            module.fail_json(msg=f"Error: {e}")
+
     else:
         module.fail_json(msg="Error: Invalid State")
     
 if __name__ == '__main__':
     main()
-
-    # if current_state is None and state == 'create' and validate == True:
-    #     try:
-    #         api_client = SddcManagerApiClient(sddc_manager_ip, sddc_manager_user, sddc_manager_password)
-    #         api_response = api_client.validate_edge_cluster(json.dumps(edge_cluster_payload))
-    #         payload_data = api_response.data
-    #         module.exit_json(changed=True, meta=payload_data)
-    #     except VcfAPIException as e:
-    #         module.fail_json(msg=f"Error: {e}")
-
-    # elif current_state is None and state == 'create' and validate == False:
-    #     try:
-    #         api_client = SddcManagerApiClient(sddc_manager_ip, sddc_manager_user, sddc_manager_password)
-    #         api_response = api_client.create_edge_cluster(json.dumps(edge_cluster_payload))
-    #         payload_data = api_response.data
-    #         module.exit_json(changed=True, meta=payload_data)
-    #     except VcfAPIException as e:
-    #         module.fail_json(msg=f"Error: {e}")
-    # elif current_state and state == 'expand_or_shrink' and validate == False:
-    #     edge_cluster_id = current_state['id']
-    #     try:
-    #         api_client = SddcManagerApiClient(sddc_manager_ip, sddc_manager_user, sddc_manager_password)
-    #         api_response = api_client.expand_or_shrink_edge_cluster(edge_cluster_id, json.dumps(edge_cluster_payload))
-    #         payload_data = api_response.data
-    #         module.exit_json(changed=True, meta=payload_data)
-    #     except VcfAPIException as e:
-    #         module.fail_json(msg=f"Error: {e}")
-
-    # elif current_state and state == 'expand_or_shrink' and validate == True:
-    #     edge_cluster_id = current_state['id']
-    #     try:
-    #         api_client = SddcManagerApiClient(sddc_manager_ip, sddc_manager_user, sddc_manager_password)
-    #         api_response = api_client.validate_edge_cluster(edge_cluster_id, json.dumps(edge_cluster_payload))
-    #         payload_data = api_response.data
-    #         module.exit_json(changed=True, meta=payload_data)
-    #     except VcfAPIException as e:
-    #         module.fail_json(msg=f"Error: {e}")
-
-    # else:
-    #     module.fail_json(msg="Error: Invalid State")
-    
-# if __name__ == '__main__':
-#     main()
