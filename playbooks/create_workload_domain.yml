@@ -1,0 +1,14 @@
+---
+- name: Create SDDC Workload Domain
+  hosts: localhost
+  become: false
+  gather_facts: false
+  vars_files:
+    - vars/workload_domain.yml
+  roles:
+    - role: create_workload_domain
+      vars:
+        sddc_manager_ip: "{{ sddc_manager_ip }}"
+        sddc_manager_username: "{{ sddc_manager_username }}"
+        sddc_manager_password: "{{ sddc_manager_password }}"
+        workload_domain_payload: "{{ workload_domain_payload }}"

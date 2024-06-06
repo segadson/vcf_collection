@@ -1,0 +1,9 @@
+- name: Validate and Create AVNs
+  hosts: localhost
+  roles:
+    - role: create_avn
+      vars:
+        sddc_manager_ip: "{{ sddc_manager_ip }}"
+        sddc_manager_user: "{{ sddc_manager_user }}"
+        sddc_manager_password: "{{ sddc_manager_password }}"
+        avns_payload: "{{ avns_payload }}"

@@ -1,0 +1,12 @@
+---
+- name: Create NSX Edge Cluster
+  hosts: localhost
+  vars_files:
+    - vars/mgmt_domain_edge_cluster.yml
+  roles:
+    - role: create_nsx_edge_cluster
+      vars:
+        sddc_manager_ip: "{{ sddc_manager_ip }}"
+        sddc_manager_username: "{{ sddc_manager_username }}"
+        sddc_manager_password: "{{ sddc_manager_password }}"
+        edge_cluster_payload: "{{ edge_cluster_payload }}"

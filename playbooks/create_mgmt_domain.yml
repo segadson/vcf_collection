@@ -1,0 +1,12 @@
+---
+- name: Create SDDC Management Domain
+  hosts: localhost
+  vars_files:
+    - vars/create_management_domain.yml
+  roles:
+    - role: create_management_domain
+      vars:
+        cloud_builder_ip: "{{ cloud_builder_ip }}"
+        cloud_builder_username: "{{ cloud_builder_username }}"
+        cloud_builder_password: "{{ cloud_builder_password }}"
+        sddc_management_domain_payload: "{{ sddc_management_domain_payload }}"
