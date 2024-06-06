@@ -1,0 +1,40 @@
+---
+- name: Validate workload domain
+  sddc_manager_workload_domain:
+    sddc_manager_ip: "{{ sddc_manager_ip }}"
+    sddc_manager_user: "{{ sddc_manager_user }}"
+    sddc_manager_password: "{{ sddc_manager_password }}"
+    state: "validate"
+    workload_domain_payload: "{{ workload_domain_payload }}"
+  register: validate_result
+
+- name: Monitor validation status
+  sddc_manager_tasks_status:
+    sddc_manager_ip: "{{ sddc_manager_ip }}"
+    sddc_manager_user: "{{ sddc_manager_user }}"
+    sddc_manager_password: "{{ sddc_manager_password }}"
+    task_id: "{{ validate_result.task_id }}"
+  register: validation_status
+  until: validation_status.result.executionStatus == 'COMPLETED'
+  retries: 60
+  delay: 10
+
+- name: Create workload domain
+  sddc_manager_workload_domain:
+    sddc_manager_ip: "{{ sddc_manager_ip }}"
+    sddc_manager_user: "{{ sddc_manager_user }}"
+    sddc_manager_password: "{{ sddc_manager_password }}"
+    state: "create"
+    workload_domain_payload: "{{ workload_domain_payload }}"
+  when: validation_status.result.executionStatus == 'COMPLETED'
+  register: create_result
+
+- name: Monitor creation status
+  sddc_manager_tasks_status:
+    sddc_manager_ip: "{{ sddc_manager_ip }}"
+    sddc_manager_user: "{{ sddc_manager_user }}"
+    sddc_manager_password: "{{ sddc_manager_password }}"
+    task_id: "{{ create_result.task_id }}"
+  until: create_result.result.executionStatus == 'COMPLETED'
+  retries: 60
+  delay: 10
