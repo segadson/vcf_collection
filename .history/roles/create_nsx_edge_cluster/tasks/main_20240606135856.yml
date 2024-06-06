@@ -1,0 +1,26 @@
+---
+- name: Create SDDC Managment Domain Validation
+  edge_cluster_validate:
+    sddc_manager_ip: "{{ sddc_manager_ip }}"
+    sddc_manager_user: "{{ sddc_manager_username }}"
+    sddc_manager_password: "{{ sddc_manager_password }}"
+    management_cluster_name: "{{ management_cluster_name }}"
+    edge_cluster_payload: "{{ edge_cluster_payload }}"
+  register: result
+    
+- set_fact:
+    edge_cluster_id: "{{ result.meta.id }}"
+
+- debug:
+    msg: "Edge Cluster ID ID: {{ edge_cluster_id }}"
+
+- name: Wait for Edge Cluster to be ready
+  sddc_manager_tasks_status:
+    sddc_manager_ip: "{{ sddc_manager_ip }}"
+    sddc_manager_user: "{{ sddc_manager_username }}"
+    sddc_manager_password: "{{ sddc_manager_password }}"
+    task_id: "{{ edge_cluster_id }}"
+  register: result
+  until: result.result.executionStatus == 'COMPLETED'
+  retries: 60
+  delay: 10
