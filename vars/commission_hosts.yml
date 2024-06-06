@@ -1,0 +1,26 @@
+---
+validate: true
+sddc_manager_ip:
+sddc_manager_user:
+sddc_manager_password:
+hostsSpec:
+  - hostfqdn: esxi-5.vcf.sddc.lab
+    username: root
+    password: VMware123!
+    storageType: VSAN
+    networkPoolName: mgmt-networkpool
+  - hostfqdn: esxi-6.vcf.sddc.lab
+    username: root
+    password: VMware123!
+    storageType: VSAN
+    networkPoolName: mgmt-networkpool
+  - hostfqdn: esxi-7.vcf.sddc.lab
+    username: root
+    password: VMware123!
+    storageType: VSAN
+    networkPoolName: mgmt-networkpool
+  - hostfqdn: esxi-8.vcf.sddc.lab
+    username: root
+    password: VMware123!
+    storageType: VSAN
+    networkPoolName: mgmt-networkpool
