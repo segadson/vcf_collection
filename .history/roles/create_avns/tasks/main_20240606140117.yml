@@ -1,0 +1,30 @@
+---
+- name: Validate AVNs
+  sddc_manager_avns:
+    sddc_manager_ip: "{{ sddc_manager_ip }}"
+    sddc_manager_user: "{{ sddc_manager_user }}"
+    sddc_manager_password: "{{ sddc_manager_password }}"
+    avns_payload: "{{ avns_payload }}"
+  register: validate_result
+
+- set_fact:
+    task_id: "{{ avns_payload.meta.taskId }}"
+    
+- name: Monitor tasks
+  sddc_manager_tasks_status:
+    sddc_manager_ip: "{{ sddc_manager_ip }}"
+    sddc_manager_user: "{{ sddc_manager_user }}"
+    sddc_manager_password: "{{ sddc_manager_password }}"
+    task_id: "{{ task_id }}"
+  register: task_status
+  until: task_status.result.executionStatus == 'COMPLETED'
+  retries: 30
+  delay: 10
+
+- name: Create AVNs
+  sddc_manager_avns:
+    sddc_manager_ip: "{{ sddc_manager_ip }}"
+    sddc_manager_user: "{{ sddc_manager_user }}"
+    sddc_manager_password: "{{ sddc_manager_password }}"
+    avns_payload: "{{ avns_payload }}"
+  when: validate_result is succeeded
