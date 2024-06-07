@@ -2,9 +2,9 @@ import os
 import sys
 
 
-current_dir = os.path.dirname(os.path.realpath(__file__))
-parent_dir = os.path.dirname(current_dir)
-sys.path.append(parent_dir)
+# current_dir = os.path.dirname(os.path.realpath(__file__))
+# parent_dir = os.path.dirname(current_dir)
+# sys.path.append(parent_dir)
 
 import requests
 import requests.packages
@@ -12,8 +12,8 @@ import json
 from json import JSONDecodeError
 import logging
 from typing import List, Dict
-from module_utils.exceptions import VcfAPIException
-from module_utils.outputs import Result
+from ansible.module_utils.exceptions import VcfAPIException
+from ansible.module_utils.outputs import Result
 
 class VsphereApiWrapper:
     def __init__(self, vcenter_host: str, vcenter_username: str, vcenter_password: str):

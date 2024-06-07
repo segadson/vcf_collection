@@ -2,9 +2,9 @@ import os
 import sys
 
 
-current_dir = os.path.dirname(os.path.realpath(__file__))
-parent_dir = os.path.dirname(current_dir)
-sys.path.append(parent_dir)
+# current_dir = os.path.dirname(os.path.realpath(__file__))
+# parent_dir = os.path.dirname(current_dir)
+# sys.path.append(parent_dir)
 
 import requests
 import requests.packages
@@ -12,8 +12,8 @@ import json
 from json import JSONDecodeError
 import logging
 from typing import List, Dict
-from module_utils.exceptions import VcfAPIException
-from module_utils.outputs import Result
+from ansible.module_utils.exceptions import VcfAPIException
+from ansible.module_utils.outputs import Result
 
 class CloudBuilderApiClient:
 
@@ -115,17 +115,17 @@ class CloudBuilderApiClient:
     def get_sddc_validation(self, sddc_id: str = None) -> List[Dict]:
         self.sddc_manager_api_string = "sddcs"
         self.validations = True
-        return self.sddc_validation_operations("GET", sddc_id)
+        return self.sddc_operations("GET", sddc_id)
     
     def validate_sddc(self,  sddc_id: str = None, sddc_management_domain_payload: str = None) -> Dict:
         self.sddc_manager_api_string = "sddcs"
         self.validations = True
-        return self.sddc_validation_operations("POST", sddc_id, sddc_management_domain_payload)
+        return self.sddc_operations("POST", sddc_id, sddc_management_domain_payload)
     
     #Todo - Add Params for which Validation or build failed? 
     def retry_sddc_validation(self, sddc_id: str = None, sddc_management_domain_payload: str = None) -> Dict:
         self.sddc_manager_api_string = "sddcs"
         self.validations = True
-        return self.sddc_validation_operations("PATCH", sddc_id ,sddc_management_domain_payload)
+        return self.sddc_operations("PATCH", sddc_id ,sddc_management_domain_payload)
     
     

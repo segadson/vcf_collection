@@ -12,6 +12,17 @@
   - debug:
       msg: "SDDC Managment Domain ID: {{ sddc_id }}"
 
+  - name: Get SDDC Managment Domain Validation Status
+    cloud_builder_get_validation_status:
+      cloud_builder_ip: "{{ cloud_builder_ip }}"
+      cloud_builder_user: "{{ cloud_builder_username }}"
+      cloud_builder_password: "{{ cloud_builder_password }}"
+      sddc_id: "{{ sddc_id }}"
+    register: result
+
+  - debug:
+      var: result
+
   - name: Wait Until SDDC Managment Domain Validation is Completed
     cloud_builder_get_validation_status:
       cloud_builder_ip: "{{ cloud_builder_ip }}"
