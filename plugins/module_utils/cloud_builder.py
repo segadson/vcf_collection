@@ -118,7 +118,7 @@ class CloudBuilderApiClient:
         return self.sddc_operations("GET", sddc_id)
     
     def validate_sddc(self,  sddc_id: str = None, sddc_management_domain_payload: str = None) -> Dict:
-        self.sddc_manager_api_string = "sddcs"
+        self.sddc_manager_api_string = "sddcs/validations"
         self.validations = True
         return self.sddc_operations("POST", sddc_id, sddc_management_domain_payload)
     
