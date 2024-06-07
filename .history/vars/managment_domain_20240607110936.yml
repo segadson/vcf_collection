@@ -1,5 +1,5 @@
 ---
-cloud_builder_ip: "10.0.0.221"
+cloud_builder_ip: "10.0.8.253"
 cloud_builder_user: "admin"
 cloud_builder_password: "VMware123!"
 sddc_id: "3ffac41d-d6bc-408f-b16c-69e1093f42d1"

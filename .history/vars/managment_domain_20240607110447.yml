@@ -1,5 +1,5 @@
 ---
-cloud_builder_ip: "10.0.0.221"
+cloud_builder_ip: "10.0.8.253"
 cloud_builder_user: "admin"
 cloud_builder_password: "VMware123!"
 sddc_id: "3ffac41d-d6bc-408f-b16c-69e1093f42d1"
@@ -48,7 +48,7 @@ sddc_management_domain_payload:
                     vmnics:
                     - vmnic0
                     - vmnic1
-                  esxLicense: M14KF-XDGDM-N84N0-L4K24-DHDHJ
+                  esxLicense: J54A4-ZE1EL-J8JNT-0W3U0-90D50
                   fipsEnabled: false
                   hostSpecs:
                   - association: mgmt-datacenter-01
@@ -129,7 +129,7 @@ sddc_management_domain_payload:
                   nsxtSpec:
                     nsxtAdminPassword: VMware123!VMware123!
                     nsxtAuditPassword: VMware123!VMware123!
-                    nsxtLicense: 4M00H-NDK51-68DN3-LL0U4-0E2LL
+                    nsxtLicense: HJ42M-VN0DP-V82D2-0V306-8N82M
                     nsxtManagerSize: medium
                     nsxtManagers:
                     - hostname: nsx-mgmt-1
@@ -171,7 +171,7 @@ sddc_management_domain_payload:
                   subscriptionLicensing: false
                   taskName: workflowconfig/workflowspec-ems.json
                   vcenterSpec:
-                    licenseFile: J54FM-ZD34K-18ENA-L83H2-9DF2Z
+                    licenseFile: J10CM-QCK85-J8LNG-010UH-0RV44
                     rootVcenterPassword: VMware123!
                     storageSize: ''
                     vcenterHostname: vcenter-mgmt
@@ -180,6 +180,6 @@ sddc_management_domain_payload:
                     vmSize: tiny
                   vsanSpec:
                     datastoreName: vcf-vsan
-                    licenseFile: N04LY-XD21P-189NA-LT28K-AM67T
+                    licenseFile: 14286-JDLEQ-J8UN3-0A98P-AWEQN
                     vsanDedup: 'false'
                     vsanName: vsan-1

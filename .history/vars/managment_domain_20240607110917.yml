@@ -1,5 +1,5 @@
 ---
-cloud_builder_ip: "10.0.0.221"
+cloud_builder_ip: "10.0.8.253"
 cloud_builder_user: "admin"
 cloud_builder_password: "VMware123!"
 sddc_id: "3ffac41d-d6bc-408f-b16c-69e1093f42d1"
@@ -180,6 +180,6 @@ sddc_management_domain_payload:
                     vmSize: tiny
                   vsanSpec:
                     datastoreName: vcf-vsan
-                    licenseFile: N04LY-XD21P-189NA-LT28K-AM67T
+                    licenseFile: 14286-JDLEQ-J8UN3-0A98P-AWEQN
                     vsanDedup: 'false'
                     vsanName: vsan-1
