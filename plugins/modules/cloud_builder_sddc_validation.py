@@ -125,7 +125,7 @@ def main():
         sddc_id = None
         api_client = CloudBuilderApiClient(cloud_builder_ip, cloud_builder_user, cloud_builder_password)
         managment_domain_validation = api_client.validate_sddc(sddc_id, json.dumps(sddc_management_domain_payload))
-        payload_data = managment_domain_validation.data
+        payload_data = managment_domain_validation['data']
         sddc_id = payload_data['id']
         module.exit_json(changed=False, meta=payload_data)
     except VcfAPIException as e:

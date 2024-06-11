@@ -39,27 +39,9 @@ class CloudBuilderApiClient:
 
     def sddc_operations(self, http_method: str, sddc_id: str = None, sddc_management_domain_payload: str = None):
 
-
-        # if self.validations == True:
-        #     udpated_url = f"https://{self.cloud_builder_ip}/v1/{self.sddc_manager_api_string}/validations"
-        # else:
-        #     udpated_url = f"https://{self.cloud_builder_ip}/v1/{self.sddc_manager_api_string}"
-
-        # if sddc_id:
-        #     udpated_url = f"https://{self.cloud_builder_ip}/v1/sddcs/{sddc_id}"
-
-        # else:
-        #     udpated_url = f"https://{self.cloud_builder_ip}/v1/sddcs/"
-        # if sddc_id:
-        #     cloud_builder_url = f"{udpated_url}/{sddc_id}"
-
-        # else:
-        #     cloud_builder_url = f"{udpated_url}/"
         
+        cloud_builder_url = f"https://{self.cloud_builder_ip}/v1/{self.sddc_manager_api_string}"
 
-        cloud_builder_url = f"{self.cloud_builder_ip}/{self.sddc_manager_api_string}"
-        print(cloud_builder_url)
-        stop
         headers = {
             "Content-Type": "application/json"
         }
@@ -117,7 +99,7 @@ class CloudBuilderApiClient:
     #######################################
     
     def get_sddc_validation(self, sddc_id: str = None) -> List[Dict]:
-        self.sddc_manager_api_string = f"/sddcs/validations/{sddc_id}"
+        self.sddc_manager_api_string = f"sddcs/validations/{sddc_id}"
 
         return self.sddc_operations("GET")
     
@@ -128,7 +110,7 @@ class CloudBuilderApiClient:
     
     #Todo - Add Params for which Validation or build failed? 
     def retry_sddc_validation(self, sddc_id: str = None, sddc_management_domain_payload: str = None) -> Dict:
-        self.sddc_manager_api_string = f"/sddcs/validations/{sddc_id}"
+        self.sddc_manager_api_string = f"sddcs/validations/{sddc_id}"
 
         return self.sddc_operations("PATCH",sddc_management_domain_payload)
     

@@ -38,7 +38,7 @@ def main():
     try:
         api_client = CloudBuilderApiClient(cloud_builder_ip, cloud_builder_user, cloud_builder_password)
         api_response = api_client.get_sddc(sddc_id)
-        payload_data = api_response.data
+        payload_data = api_response['data']
 
         #To Do have to redo the bring up to see what the params are
 

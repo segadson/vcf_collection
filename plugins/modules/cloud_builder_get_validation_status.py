@@ -39,7 +39,7 @@ def main():
     try:
         api_client = CloudBuilderApiClient(cloud_builder_ip, cloud_builder_user, cloud_builder_password)
         validation_report = api_client.get_sddc_validation(sddc_id)
-        payload_data = validation_report.data
+        payload_data = validation_report['data']
 
         if payload_data['executionStatus'] == 'FAILED':
             validation_check_list = payload_data['validationChecks']
