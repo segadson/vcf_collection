@@ -4,17 +4,17 @@ sddc_manager_username: "administrator@vsphere.local"
 sddc_manager_password: "VMware123!"
 hostsSpec:
   hosts:
-  - hostfqdn: esxi-10.vcf.sddc.lab
+  - fqdn: esxi-10.vcf.sddc.lab
     username: root
     password: VMware123!
     storageType: VSAN
     networkPoolName: mgmt-networkpool
-  - hostfqdn: esxi-11.vcf.sddc.lab
+  - fqdn: esxi-11.vcf.sddc.lab
     username: root
     password: VMware123!
     storageType: VSAN
     networkPoolName: mgmt-networkpool
-  - hostfqdn: esxi-12.vcf.sddc.lab
+  - fqdn: esxi-12.vcf.sddc.lab
     username: root
     password: VMware123!
     storageType: VSAN

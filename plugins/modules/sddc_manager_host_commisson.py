@@ -80,17 +80,17 @@ def main():
     validate = module.params['validate']
     state = module.params['state']
 
-    host_list = hosts_list_payload['hosts']
+    updated_host_payload = hosts_list_payload['hosts']
 
     #Check for vvolStorageProtocolType
-    if state == 'commission':
-        for item in host_list:
-            if item['vvolStorageProtocolType'] == None and item['storageType'] == ['VVOL', 'NFS', 'VMFS_FC']:
-                module.fail_json(msg="vvolStorageProtocolType is required for VVOL, NFS or VMFS_FC StorageType")
-            elif item['vvolStorageProtocolType'] == None and item['storageType'] == ['VSAN', 'VSAN_ESA', 'VSAN_REMOTE']:
-                module.fail_json(msg="vvolStorageProtocolType should be null")
+    # if state == 'commission':
+    #     for item in updated_host_payload:
+    #         if item['vvolStorageProtocolType'] == None and item['storageType'] == ['VVOL', 'NFS', 'VMFS_FC']:
+    #             module.fail_json(msg="vvolStorageProtocolType is required for VVOL, NFS or VMFS_FC StorageType")
+    #         elif item['vvolStorageProtocolType'] == None and item['storageType'] == ['VSAN', 'VSAN_ESA', 'VSAN_REMOTE']:
+    #             module.fail_json(msg="vvolStorageProtocolType should be null")
 
-    print("Host List: ", host_list)
+    print("Host List: ", updated_host_payload)
     if state == 'commission' and validate == True:
         #############
         # Get Network Pool by Name and add to payload
@@ -101,7 +101,8 @@ def main():
         for item in updated_host_payload:
             item['networkPoolId'] = get_network_pool_by_name(sddc_manager_ip, sddc_manager_user, 
                                                              sddc_manager_password, item['networkPoolName'])['id']
-
+        print("Updated Host Payload: ", json.dumps(updated_host_payload))
+        # stop
         try:
             api_client = SddcManagerApiClient(sddc_manager_ip, sddc_manager_user, sddc_manager_password)
             api_response = api_client.validate_hosts(json.dumps(updated_host_payload))
