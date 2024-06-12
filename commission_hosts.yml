@@ -1,0 +1,12 @@
+---
+- name: Commission Hosts
+  hosts: localhost
+  vars_files:
+    - vars/commission_hosts.yml
+  roles:
+    - role: commission_hosts
+      vars:
+        commission_hosts_sddc_manager_ip: "{{ sddc_manager_ip }}"
+        commission_hosts_sddc_manager_username: "{{ sddc_manager_username }}"
+        commission_hosts_sddc_manager_password: "{{ sddc_manager_password }}"
+        commission_hosts_sddc_management_domain_payload: "{{ sddc_management_domain_payload }}"
