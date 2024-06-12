@@ -90,7 +90,7 @@ sddc_management_domain_payload:
     transportVlanId: 10
   vsanSpec:
     vsanName: vsan-1
-    licenseFile: 4M4AM-JPL10-08HQA-0R1R0-9TDM1
+    licenseFile: N02F6-XDX46-586N0-LDKA2-GJ4JT
     vsanDedup: 'false'
     datastoreName: vcf-vsan
   dvsSpecs:

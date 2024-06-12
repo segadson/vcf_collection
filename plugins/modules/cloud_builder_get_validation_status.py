@@ -4,9 +4,9 @@ import sys
 6
 
 
-current_dir = os.path.dirname(os.path.realpath(__file__))
-parent_dir = os.path.dirname(current_dir)
-sys.path.append(parent_dir)
+# current_dir = os.path.dirname(os.path.realpath(__file__))
+# parent_dir = os.path.dirname(current_dir)
+# sys.path.append(parent_dir)
 
 from ansible.module_utils.basic import *
 from ansible.module_utils.cloud_builder import CloudBuilderApiClient
@@ -39,8 +39,8 @@ def main():
     try:
         api_client = CloudBuilderApiClient(cloud_builder_ip, cloud_builder_user, cloud_builder_password)
         validation_report = api_client.get_sddc_validation(sddc_id)
-        payload_data = validation_report['data']
-
+        payload_data = validation_report.data
+        module.log(msg=payload_data['executionStatus'] )
         if payload_data['executionStatus'] == 'FAILED':
             validation_check_list = payload_data['validationChecks']
             error_check_list = []
@@ -48,11 +48,11 @@ def main():
                 if validation_check['resultStatus'] == 'FAILED':
                     error_check_list.append(validation_check)
 
-            module.fail_json(msg=f"Error List: {error_check_list}")
+            module.fail_json(changed=False, meta=payload_data)
         else:
             module.exit_json(changed=False, meta=payload_data)
     except VcfAPIException as e:
-        module.fail_json(msg=f"Error: {e}")
+        module.fail_json(changed=False, meta=payload_data)
 
 if __name__ == '__main__':
     main()

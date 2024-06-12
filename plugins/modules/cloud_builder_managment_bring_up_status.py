@@ -3,13 +3,13 @@ import os
 import sys
 
 
-current_dir = os.path.dirname(os.path.realpath(__file__))
-parent_dir = os.path.dirname(current_dir)
-sys.path.append(parent_dir)
+# current_dir = os.path.dirname(os.path.realpath(__file__))
+# parent_dir = os.path.dirname(current_dir)
+# sys.path.append(parent_dir)
 
 from ansible.module_utils.basic import *
-from module_utils.cloud_builder import CloudBuilderApiClient
-from module_utils.exceptions import VcfAPIException
+from ansible.module_utils.cloud_builder import CloudBuilderApiClient
+from ansible.module_utils.exceptions import VcfAPIException
 from datetime import datetime
 import time
 import json
@@ -38,7 +38,7 @@ def main():
     try:
         api_client = CloudBuilderApiClient(cloud_builder_ip, cloud_builder_user, cloud_builder_password)
         api_response = api_client.get_sddc(sddc_id)
-        payload_data = api_response['data']
+        payload_data = api_response.data
 
         #To Do have to redo the bring up to see what the params are
 
