@@ -65,11 +65,15 @@ class CloudBuilderApiClient:
             raise VcfAPIException("Bad JSON in response") from e
         is_success = 299 >= response.status_code >= 200     # 200 to 299 is OK
         log_line = log_line_post.format(is_success, response.status_code, response.reason)
+        
         if is_success:
             self.logger.debug(msg=log_line)
             return Result(response.status_code, message=response.reason, data=data_out)
-        self.logger.error(msg=log_line)
-        raise VcfAPIException(f"{response.status_code}: {response.reason}") #data_out
+        else:
+            error_message = data_out.get('message', '') if isinstance(data_out, dict) else ''
+            log_line += f", error_message={error_message}"
+            self.logger.error(msg=log_line)
+            raise VcfAPIException(f"{response.status_code}: {response.reason}, {error_message}") #data_out    
     
     #######################################
     # To do: Create Class for SDDC

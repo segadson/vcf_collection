@@ -1,10 +1,6 @@
 import os
 import sys
+from requests.exceptions import HTTPError
 
-
-# current_dir = os.path.dirname(os.path.realpath(__file__))
-# parent_dir = os.path.dirname(current_dir)
-# sys.path.append(parent_dir)
-
-class VcfAPIException(Exception):
+class VcfAPIException(HTTPError):
     pass

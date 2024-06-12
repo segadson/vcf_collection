@@ -157,12 +157,15 @@ class SddcManagerApiClient:
             raise VcfAPIException("Bad JSON in response") from e
         is_success = 299 >= response.status_code >= 200     # 200 to 299 is OK
         log_line = log_line_post.format(is_success, response.status_code, response.reason)
+        
         if is_success:
             self.logger.debug(msg=log_line)
             return Result(response.status_code, message=response.reason, data=data_out)
-        self.logger.error(msg=log_line)
-        raise VcfAPIException(f"{response.status_code}: {response.reason}") #data_out
-    
+        else:
+            error_message = data_out.get('message', '') if isinstance(data_out, dict) else ''
+            log_line += f", error_message={error_message}"
+            self.logger.error(msg=log_line)
+            raise VcfAPIException(f"{response.status_code}: {response.reason}, {error_message}") #data_out    
     #######################################
     # To do: Create Class for SDDC
     # https://app.quicktype.io/
@@ -276,6 +279,10 @@ class SddcManagerApiClient:
     def validate_hosts(self, host_payload: str = None) -> List[Dict]:
         self.api_extension = f"hosts/validations"
         return self.sddc_operations("POST", host_payload)
+    
+    def get_validate_hosts_status(self,  resource_id: str = None) -> List[Dict]:
+        self.api_extension = f"hosts/validations/{resource_id}"
+        return self.sddc_operations("GET")
     
     def commission_hosts(self, host_payload: str = None) -> List[Dict]:
         self.api_extension = f"hosts"

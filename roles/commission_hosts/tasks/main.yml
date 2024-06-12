@@ -15,19 +15,19 @@
 - debug:
     msg: "Host Commission Validation ID: {{ hosts_commission_validation_id }}"
 
-# - name: Wait for Host Commission Validation to be ready
-#   sddc_manager_tasks_status:
-#     sddc_manager_ip: "{{ sddc_manager_ip }}"
-#     sddc_manager_user: "{{ sddc_manager_username }}"
-#     sddc_manager_password: "{{ sddc_manager_password }}"
-#     tasks_id: "{{ hosts_commission_validation_id }}"
-#     sddc_manager_tasks_type: hosts
-#     validation: True
-#   register: result
-#   until: result.meta.executionStatus == 'COMPLETED'
-#   retries: 60
-#   delay: 10
-#   failed_when: result.meta.executionStatus == "FAILED"
+- name: Wait for Host Commission Validation to be ready
+  sddc_manager_tasks_status:
+    sddc_manager_ip: "{{ sddc_manager_ip }}"
+    sddc_manager_user: "{{ sddc_manager_username }}"
+    sddc_manager_password: "{{ sddc_manager_password }}"
+    tasks_id: "{{ hosts_commission_validation_id }}"
+    sddc_manager_tasks_type: hosts
+    validation: True
+  register: result
+  until: result.meta.executionStatus == 'COMPLETED'
+  retries: 60
+  delay: 10
+  failed_when: result.meta.executionStatus == "FAILED"
 
 # - debug:
 #     msg: "Creating Host Commission"

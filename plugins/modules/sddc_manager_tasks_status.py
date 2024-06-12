@@ -81,13 +81,15 @@ def main():
         except VcfAPIException as e:
             module.fail_json(changed=False, meta=payload_data)
     elif validation == True and sddc_manager_tasks_type == 'hosts':
+        payload_data = None
         try:
             api_client = SddcManagerApiClient(sddc_manager_ip, sddc_manager_user, sddc_manager_password)
-            api_response = api_client.validate_hosts(tasks_id)
+            api_response = api_client.get_validate_hosts_status(tasks_id)
+            print(api_response)
             payload_data = api_response.data
             error_check_list = evaluate_validation_status(payload_data)
         except VcfAPIException as e:
-            module.fail_json(changed=False, meta=payload_data)
+            module.fail_json(msg="An error occurred during the API call", changed=False, meta=e)
     elif validation == True and sddc_manager_tasks_type == 'clusters':
         try:
             api_client = SddcManagerApiClient(sddc_manager_ip, sddc_manager_user, sddc_manager_password)
