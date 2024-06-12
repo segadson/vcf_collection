@@ -19,10 +19,19 @@ import yaml
 
 #Todo Documentation
 
+def get_edge_cluster_by_name(sddc_manager_ip, sddc_manager_user, sddc_manager_password, edge_cluster_name):
+    api_client = SddcManagerApiClient(sddc_manager_ip, sddc_manager_user, sddc_manager_password)
+    api_response = api_client.get_edge_clusters()
+    edge_clusters = api_response.data
+    for edge_cluster in edge_clusters:
+        if edge_cluster.name == edge_cluster_name:
+            return edge_cluster
+    return None
+
 def check_avn_current_operation(sddc_manager_ip, sddc_manager_user, sddc_manager_password):
     api_client = SddcManagerApiClient(sddc_manager_ip, sddc_manager_user, sddc_manager_password)
     api_response = api_client.get_avns()
-    payload_data = api_response['data']
+    payload_data = api_response.data
     return payload_data
 
 def create_avns_(sddc_manager_ip, sddc_manager_user, sddc_manager_password, avns_payload):
@@ -30,7 +39,7 @@ def create_avns_(sddc_manager_ip, sddc_manager_user, sddc_manager_password, avns
     try:
         api_client = SddcManagerApiClient(sddc_manager_ip, sddc_manager_user, sddc_manager_password)
         api_response = api_client.create_avns(payload_data)
-        payload_data = api_response['data']
+        payload_data = api_response.data
         return payload_data
     except VcfAPIException as e:
         raise VcfAPIException(f"Error: {e}")
@@ -40,7 +49,7 @@ def validate_avns_(sddc_manager_ip, sddc_manager_user, sddc_manager_password, av
     try:
         api_client = SddcManagerApiClient(sddc_manager_ip, sddc_manager_user, sddc_manager_password)
         api_response = api_client.validate_avns(payload_data)
-        payload_data = api_response['data']
+        payload_data = api_response.data
         return payload_data
     except VcfAPIException as e:
         raise VcfAPIException(f"Error: {e}")
@@ -52,6 +61,7 @@ def main():
         sddc_manager_password=dict(type='str', required=True, no_log=True),
         avns_payload=dict(type='dict', required=True),
         operation=dict(type='str', choices=['create', 'validate'], default='create'),
+        management_edge_cluster_name = dict(type='str', required=True)
     )
 
     module = AnsibleModule(supports_check_mode=True, argument_spec=parameters)
@@ -60,6 +70,14 @@ def main():
     sddc_manager_password = module.params['sddc_manager_password']
     operation = module.params['operation']
     avns_payload = module.params['avns_payload']
+    management_edge_cluster_name = module.params['management_edge_cluster_name']
+
+    edge_cluster = get_edge_cluster_by_name(sddc_manager_ip, sddc_manager_user, sddc_manager_password, management_edge_cluster_name)
+    if edge_cluster is None:
+        module.fail_json(msg=f"Edge cluster {management_edge_cluster_name} not found")
+
+    edge_cluster_id = edge_cluster['id']
+    avns_payload['edgeClusterId'] = edge_cluster_id
 
     if operation == 'create':
         try:
