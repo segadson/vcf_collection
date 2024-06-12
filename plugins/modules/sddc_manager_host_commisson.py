@@ -65,7 +65,7 @@ def main():
         "sddc_manager_ip": {"required": True, "type": "str"},
         "sddc_manager_user": {"required": True, "type": "str"},
         "sddc_manager_password": {"required": True, "type": "str"},
-        "hostsSpec": {"required": True, "type": "list"}, # List of Hosts
+        "hosts_list_payload": {"required": True, "type": "dict"}, # List of Hosts
         "validate": {"required": False, "type": "bool", "default": False},
         "state": {"required": True, "type": "str", "choices": ['commission', 'decommission']}
     }

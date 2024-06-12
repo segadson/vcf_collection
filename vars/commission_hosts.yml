@@ -3,6 +3,7 @@ sddc_manager_ip: "sddc-manager.vcf.sddc.lab"
 sddc_manager_username: "administrator@vsphere.local"
 sddc_manager_password: "VMware123!"
 hostsSpec:
+  hosts:
   - hostfqdn: esxi-10.vcf.sddc.lab
     username: root
     password: VMware123!

@@ -1,12 +1,11 @@
 ---
----
 - name: Create Host Commission Validation
   sddc_manager_host_commisson:
     sddc_manager_ip: "{{ sddc_manager_ip }}"
     sddc_manager_user: "{{ sddc_manager_username }}"
     sddc_manager_password: "{{ sddc_manager_password }}"
     hostsSpec: "{{ hostsSpec }}"
-    state: create
+    state: commission
     validate: True
   register: result
     
