@@ -41,6 +41,8 @@ class CloudBuilderApiClient:
 
         
         cloud_builder_url = f"https://{self.cloud_builder_ip}/v1/{self.sddc_manager_api_string}"
+        # print(cloud_builder_url)
+        # stop
 
         headers = {
             "Content-Type": "application/json"
