@@ -9,22 +9,29 @@
     operation: validate
   register: result
 
+- name: Check if task completed
+  debug:
+    msg: "Task completed"
+  when: result.meta.executionStatus == 'COMPLETED'
 - set_fact:
     task_id: "{{ result.meta.id }}"
-    
+- name: Debug output
+  debug:
+    var: result
+
 # - name: Monitor tasks
 #   sddc_manager_tasks_status:
 #     sddc_manager_ip: "{{ sddc_manager_ip }}"
-#     sddc_manager_user: "{{ sddc_manager_user }}"
+#     sddc_manager_user: "{{ sddc_manager_username }}"
 #     sddc_manager_password: "{{ sddc_manager_password }}"
 #     sddc_manager_tasks_type: avns
 #     validate: True
-#   register: task_status
-#   until: task_status.result.executionStatus == 'COMPLETED'
-#   retries: 30
+#   register: result
+#   until: result.meta.executionStatus == 'COMPLETED'
+#   retries: 60
 #   delay: 10
-#   failed_when: task_status.result.executionStatus == "FAILED"
-  
+#   failed_when: result.meta.executionStatus == "FAILED"
+
 
 # - name: Create AVNs
 #   sddc_manager_avns:

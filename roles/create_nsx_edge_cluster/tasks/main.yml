@@ -16,7 +16,7 @@
 - debug:
     msg: "Edge Cluster Validation ID: {{ edge_cluster_validation_id }}"
 
-- name: Wait for Edge Cluster to be ready
+- name: Wait for Edge Cluster Validation to be ready
   sddc_manager_tasks_status:
     sddc_manager_ip: "{{ sddc_manager_ip }}"
     sddc_manager_user: "{{ sddc_manager_username }}"
