@@ -1,10 +1,10 @@
 #!/usr/bin/python
 import sys
-sys.path.append('/home/segadson/vcf/ansible_vcf/plugins')
+# sys.path.append('/home/segadson/vcf/ansible_vcf/plugins')
 
 from ansible.module_utils.basic import *
-from module_utils.sddc_manager import SddcManagerApiClient
-from module_utils.exceptions import VcfAPIException
+from ansible.module_utils.sddc_manager import SddcManagerApiClient
+from ansible.module_utils.exceptions import VcfAPIException
 from datetime import datetime
 import time
 import json
@@ -30,7 +30,7 @@ def get_hosts_by_name_valid_for_commisson(sddc_manager_ip, sddc_manager_user, sd
         hosts_name = host['fqdn']
         api_client = SddcManagerApiClient(sddc_manager_ip, sddc_manager_user, sddc_manager_password)
         api_response = api_client.get_all_hosts()
-        payload_data = api_response['data']
+        payload_data = api_response.data
         for element in payload_data['elements']:
             print("Element: ", element['fqdn'])
             if element['fqdn'] == hosts_name and element['status'] != 'UNASSIGNED_USEABLE' and element['status'] != 'ASSIGNED':
@@ -45,7 +45,7 @@ def get_hosts_by_name_valid_for_decommisson(sddc_manager_ip, sddc_manager_user, 
         hosts_name = host['fqdn']
         api_client = SddcManagerApiClient(sddc_manager_ip, sddc_manager_user, sddc_manager_password)
         api_response = api_client.get_all_hosts()
-        payload_data = api_response['data']
+        payload_data = api_response.data
         for element in payload_data['elements']:
             if element['fqdn'] == hosts_name and element['status'] == 'UNASSIGNED_USEABLE':
                 valid_hosts_lists.append(hosts_name)
@@ -54,7 +54,7 @@ def get_hosts_by_name_valid_for_decommisson(sddc_manager_ip, sddc_manager_user, 
 def get_network_pool_by_name(sddc_manager_ip, sddc_manager_user, sddc_manager_password, name):
     api_client = SddcManagerApiClient(sddc_manager_ip, sddc_manager_user, sddc_manager_password)
     api_response = api_client.get_network_pools()
-    payload_data = api_response['data']
+    payload_data = api_response.data
     for element in payload_data['elements']:
         if element['name'] == name:
             return element
@@ -65,7 +65,7 @@ def main():
         "sddc_manager_ip": {"required": True, "type": "str"},
         "sddc_manager_user": {"required": True, "type": "str"},
         "sddc_manager_password": {"required": True, "type": "str"},
-        "hosts_list_payload": {"required": True, "type": "dict"}, # List of Hosts
+        "hostsSpec": {"required": True, "type": "list"}, # List of Hosts
         "validate": {"required": False, "type": "bool", "default": False},
         "state": {"required": True, "type": "str", "choices": ['commission', 'decommission']}
     }
@@ -95,8 +95,8 @@ def main():
         #############
         # Get Network Pool by Name and add to payload
         ###############
-        updated_host_payload = get_hosts_by_name_valid_for_commisson(sddc_manager_ip, sddc_manager_user, 
-                                                                     sddc_manager_password, host_list)
+        # updated_host_payload = get_hosts_by_name_valid_for_commisson(sddc_manager_ip, sddc_manager_user, 
+        #                                                              sddc_manager_password, host_list)
         
         for item in updated_host_payload:
             item['networkPoolId'] = get_network_pool_by_name(sddc_manager_ip, sddc_manager_user, 
@@ -105,20 +105,20 @@ def main():
         try:
             api_client = SddcManagerApiClient(sddc_manager_ip, sddc_manager_user, sddc_manager_password)
             api_response = api_client.validate_hosts(json.dumps(updated_host_payload))
-            payload_data = api_response['data']
+            payload_data = api_response.data
             module.exit_json(changed=False, meta=payload_data)
         except VcfAPIException as e:
             module.fail_json(msg=f"Error: {e}")
     elif state == 'commission' and validate == False:
-        updated_host_payload = get_hosts_by_name_valid_for_commisson(sddc_manager_ip, sddc_manager_user, 
-                                                                     sddc_manager_password, host_list)
+        # updated_host_payload = get_hosts_by_name_valid_for_commisson(sddc_manager_ip, sddc_manager_user, 
+        #                                                              sddc_manager_password, host_list)
         for item in updated_host_payload:
             item['networkPoolId'] = get_network_pool_by_name(sddc_manager_ip, sddc_manager_user, 
                                                              sddc_manager_password, item['networkPoolName'])['id']
         try:
             api_client = SddcManagerApiClient(sddc_manager_ip, sddc_manager_user, sddc_manager_password)
             api_response = api_client.commission_hosts(json.dumps(updated_host_payload))
-            payload_data = api_response['data']
+            payload_data = api_response.data
             module.exit_json(changed=False, meta=payload_data)
         except VcfAPIException as e:
             module.fail_json(msg=f"Error: {e}")
@@ -129,7 +129,7 @@ def main():
         try:
             api_client = SddcManagerApiClient(sddc_manager_ip, sddc_manager_user, sddc_manager_password)
             api_response = api_client.decommission_hosts(json.dumps(updated_host_payload))
-            payload_data = api_response['data']
+            payload_data = api_response.data
             module.exit_json(changed=False, meta=payload_data)
         except VcfAPIException as e:
             module.fail_json(msg=f"Error: {e}")

@@ -1,0 +1,69 @@
+---
+---
+- name: Create Host Commission Validation
+  sddc_manager_nsxt_hosts_commission:
+    sddc_manager_ip: "{{ sddc_manager_ip }}"
+    sddc_manager_user: "{{ sddc_manager_username }}"
+    sddc_manager_password: "{{ sddc_manager_password }}"
+    management_cluster_name: "{{ management_cluster_name }}"
+    hostsSpec: "{{ hostsSpec }}"
+    state: create
+    validate: True
+  register: result
+    
+- set_fact:
+    hosts_commission_validation_id: "{{ result.meta.id }}"
+
+- debug:
+    msg: "Host Commission Validation ID: {{ hosts_commission_validation_id }}"
+
+# - name: Wait for Host Commission Validation to be ready
+#   sddc_manager_tasks_status:
+#     sddc_manager_ip: "{{ sddc_manager_ip }}"
+#     sddc_manager_user: "{{ sddc_manager_username }}"
+#     sddc_manager_password: "{{ sddc_manager_password }}"
+#     tasks_id: "{{ hosts_commission_validation_id }}"
+#     sddc_manager_tasks_type: nsxt_hosts_commission
+#     validation: True
+#   register: result
+#   until: result.meta.executionStatus == 'COMPLETED'
+#   retries: 60
+#   delay: 10
+#   failed_when: result.meta.executionStatus == "FAILED"
+
+# - debug:
+#     msg: "Creating NSX Host Commission"
+
+# - name: Create Host Commission
+#   sddc_manager_nsxt_hosts_commission:
+#     sddc_manager_ip: "{{ sddc_manager_ip }}"
+#     sddc_manager_user: "{{ sddc_manager_username }}"
+#     sddc_manager_password: "{{ sddc_manager_password }}"
+#     management_cluster_name: "{{ management_cluster_name }}"
+#     hosts_commission_payload: "{{ hosts_commission_payload }}"
+#     state: create
+#     validate: False
+#   register: result
+    
+# - set_fact:
+#     hosts_commission_id: "{{ result.meta.id }}"
+
+# - debug:
+#     msg: "Host Commission Creation ID: {{ hosts_commission_id }}"
+
+# - name: Wait for Host Commission to be ready
+#   sddc_manager_tasks_status:
+#     sddc_manager_ip: "{{ sddc_manager_ip }}"
+#     sddc_manager_user: "{{ sddc_manager_username }}"
+#     sddc_manager_password: "{{ sddc_manager_password }}"
+#     tasks_id: "{{ hosts_commission_id }}"
+#     sddc_manager_tasks_type: nsxt_hosts_commission
+#     validation: False
+#   register: result
+#   until: result.meta.status == 'COMPLETED'
+#   retries: 60
+#   delay: 10
+#   failed_when: result.meta.status == "FAILED"
+
+# - debug:
+#     msg: "NSX Host Commission Created"
