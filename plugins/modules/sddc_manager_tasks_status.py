@@ -46,14 +46,10 @@ def main():
 
     def evaluate_tasks_status(payload_data):
         if payload_data['status'] == 'FAILED':
-            subtask_list = payload_data['subTasks']
-            error_check_list = []
-            for subtask in subtask_list:
-                if subtask['status'].upper() == 'FAILED':
-                    error_check_list.append(subtask)
-            return error_check_list
+            error_check_list = payload_data['errors']
+            module.fail_json(changed=False, meta=error_check_list)
         else:
-            return []  # return an empty list when resultStatus is not 'FAILED'
+            module.exit_json(changed=True, meta=payload_data)
         
     def evaluate_validation_status(payload_data):
         if payload_data['executionStatus'] == 'FAILED':
@@ -129,11 +125,7 @@ def main():
             api_client = SddcManagerApiClient(sddc_manager_ip, sddc_manager_user, sddc_manager_password)
             api_response = api_client.get_sddc_manager_task_by_id(tasks_id)
             payload_data = api_response.data
-            failed_tasks = evaluate_tasks_status(payload_data)
-            if failed_tasks:
-                module.fail_json(changed=False, meta=payload_data)
-            else:
-                module.exit_json(changed=False, meta=payload_data)
+            tasks_status = evaluate_tasks_status(payload_data)
         except VcfAPIException as e:
             module.fail_json(changed=False, meta=payload_data)
     else:
