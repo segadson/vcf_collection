@@ -35,11 +35,9 @@ def main():
     cloud_builder_password = module.params['cloud_builder_password']
     sddc_management_domain_payload = module.params['sddc_management_domain_payload']
     try:
-        sddc_id = None
         api_client = CloudBuilderApiClient(cloud_builder_ip, cloud_builder_user, cloud_builder_password)
-        managment_domain_validation = api_client.create_sddc(sddc_id, json.dumps(sddc_management_domain_payload))
+        managment_domain_validation = api_client.create_sddc(json.dumps(sddc_management_domain_payload))
         payload_data = managment_domain_validation['data']
-        sddc_id = payload_data['id']
         module.exit_json(changed=False, meta=payload_data)
     except VcfAPIException as e:
         module.fail_json(msg=f"Error: {e}")

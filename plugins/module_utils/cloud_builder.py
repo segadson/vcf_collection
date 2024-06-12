@@ -14,17 +14,17 @@ import logging
 from typing import List, Dict
 from ansible.module_utils.exceptions import VcfAPIException
 from ansible.module_utils.outputs import Result
-
+# from urllib3.exceptions import InsecureRequestWarning
+# requests.urllib3.disable_warnings(category=InsecureRequestWarning)
 class CloudBuilderApiClient:
 
     #Todo - Add Self.id
 
-    def __init__(self, cloud_builder_ip: str, cloud_builder_user: str, cloud_builder_password: str, ssl_verify: bool = False, logger: logging.Logger = None, sddc_manager_api_string: str = None, validations: bool = False):
+    def __init__(self, cloud_builder_ip: str, cloud_builder_user: str, cloud_builder_password: str, ssl_verify: bool = False, logger: logging.Logger = None, sddc_manager_api_string: str = None):
         self.cloud_builder_ip = cloud_builder_ip
         self.cloud_builder_user = cloud_builder_user
         self.cloud_builder_password = cloud_builder_password
         self.sddc_manager_api_string = sddc_manager_api_string
-        self.validations = validations
         self.logger = logger or logging.getLogger(__name__)
         self.ssl_verify = ssl_verify
         if not self.ssl_verify:
@@ -37,12 +37,11 @@ class CloudBuilderApiClient:
     #######################################
 
 
-    def sddc_operations(self, http_method: str, sddc_id: str = None, sddc_management_domain_payload: str = None):
+    def sddc_operations(self, http_method: str, sddc_management_domain_payload: str = None):
 
         
         cloud_builder_url = f"https://{self.cloud_builder_ip}/v1/{self.sddc_manager_api_string}"
-        # print(cloud_builder_url)
-        # stop
+
 
         headers = {
             "Content-Type": "application/json"
@@ -50,11 +49,11 @@ class CloudBuilderApiClient:
 
         log_line_pre = f"method={http_method}, url={cloud_builder_url}"
         log_line_post = ', '.join((log_line_pre, "success={}, status_code={}, message={}"))
-        
         try:
             self.logger.debug(log_line_pre)
             response = requests.request(method=http_method, url=cloud_builder_url, headers=headers, auth=(self.cloud_builder_user, self.cloud_builder_password), 
                                         verify=self.ssl_verify,  data=sddc_management_domain_payload)
+
         except requests.exceptions.RequestException as e:
             self.logger.error(msg=(str(e)))
             raise VcfAPIException(f"Error: {e}")    
@@ -83,7 +82,7 @@ class CloudBuilderApiClient:
 
         return self.sddc_operations("GET")
     
-    def create_sddc(self, sddc_id: str = None,  sddc_management_domain_payload: str = None) -> Dict:
+    def create_sddc(self,sddc_management_domain_payload: str = None) -> Dict:
         self.sddc_manager_api_string = "sddcs"
 
         return self.sddc_operations("POST",  sddc_management_domain_payload)
@@ -105,7 +104,8 @@ class CloudBuilderApiClient:
 
         return self.sddc_operations("GET")
     
-    def validate_sddc(self,  sddc_id: str = None, sddc_management_domain_payload: str = None) -> Dict:
+    def validate_sddc(self, sddc_management_domain_payload: str = None) -> Dict:
+
         self.sddc_manager_api_string = "sddcs/validations"
 
         return self.sddc_operations("POST", sddc_management_domain_payload)
@@ -115,5 +115,3 @@ class CloudBuilderApiClient:
         self.sddc_manager_api_string = f"sddcs/validations/{sddc_id}"
 
         return self.sddc_operations("PATCH",sddc_management_domain_payload)
-    
-    

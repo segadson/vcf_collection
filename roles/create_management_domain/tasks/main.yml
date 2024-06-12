@@ -5,6 +5,9 @@
       cloud_builder_password: "{{ cloud_builder_password }}"
       sddc_management_domain_payload: "{{ sddc_management_domain_payload }}"
     register: result
+
+  - debug:
+      msg: "SDDC Managment Domain ID: {{ result }}"
       
   - set_fact:
       sddc_id: "{{ result.meta.id }}"
