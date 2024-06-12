@@ -2,20 +2,21 @@
 sddc_manager_ip: "sddc-manager.vcf.sddc.lab"
 sddc_manager_username: "administrator@vsphere.local"
 sddc_manager_password: "VMware123!"
-management_edge_cluster_name: "mgmt-cluster-01"
+management_edge_cluster_name: "EC-01"
 avns_payload:
-- gateway: 10.50.0.1
-  mtu: 8940
-  name: region-seg01
-  regionType: REGION_A
-  routerName: VLC-Tier-1
-  subnet: 10.50.0.0
-  subnetMask: 255.255.255.0
-- gateway: 10.60.0.1
-  mtu: 8940
-  name: xregion-seg01
-  regionType: X_REGION
-  routerName: VLC-Tier-1
-  subnet: 10.60.0.0
-  subnetMask: 255.255.255.0
-edgeClusterId: ''
+  avns:
+  - gateway: 10.50.0.1
+    mtu: 8940
+    name: region-seg01
+    regionType: REGION_A
+    routerName: VLC-Tier-1
+    subnet: 10.50.0.0
+    subnetMask: 255.255.255.0
+  - gateway: 10.60.0.1
+    mtu: 8940
+    name: xregion-seg01
+    regionType: X_REGION
+    routerName: VLC-Tier-1
+    subnet: 10.60.0.0
+    subnetMask: 255.255.255.0
+  edgeClusterId: ''

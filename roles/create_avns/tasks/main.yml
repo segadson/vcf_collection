@@ -2,29 +2,34 @@
 - name: Validate AVNs
   sddc_manager_avns:
     sddc_manager_ip: "{{ sddc_manager_ip }}"
-    sddc_manager_user: "{{ sddc_manager_user }}"
+    sddc_manager_user: "{{ sddc_manager_username }}"
     sddc_manager_password: "{{ sddc_manager_password }}"
     avns_payload: "{{ avns_payload }}"
-  register: validate_result
+    management_edge_cluster_name: "{{ management_edge_cluster_name }}"
+    operation: validate
+  register: result
 
 - set_fact:
-    task_id: "{{ avns_payload.meta.taskId }}"
+    task_id: "{{ result.meta.id }}"
     
-- name: Monitor tasks
-  sddc_manager_tasks_status:
-    sddc_manager_ip: "{{ sddc_manager_ip }}"
-    sddc_manager_user: "{{ sddc_manager_user }}"
-    sddc_manager_password: "{{ sddc_manager_password }}"
-    task_id: "{{ task_id }}"
-  register: task_status
-  until: task_status.result.executionStatus == 'COMPLETED'
-  retries: 30
-  delay: 10
+# - name: Monitor tasks
+#   sddc_manager_tasks_status:
+#     sddc_manager_ip: "{{ sddc_manager_ip }}"
+#     sddc_manager_user: "{{ sddc_manager_user }}"
+#     sddc_manager_password: "{{ sddc_manager_password }}"
+#     sddc_manager_tasks_type: avns
+#     validate: True
+#   register: task_status
+#   until: task_status.result.executionStatus == 'COMPLETED'
+#   retries: 30
+#   delay: 10
+#   failed_when: task_status.result.executionStatus == "FAILED"
+  
 
-- name: Create AVNs
-  sddc_manager_avns:
-    sddc_manager_ip: "{{ sddc_manager_ip }}"
-    sddc_manager_user: "{{ sddc_manager_user }}"
-    sddc_manager_password: "{{ sddc_manager_password }}"
-    avns_payload: "{{ avns_payload }}"
-  when: validate_result is succeeded
+# - name: Create AVNs
+#   sddc_manager_avns:
+#     sddc_manager_ip: "{{ sddc_manager_ip }}"
+#     sddc_manager_user: "{{ sddc_manager_user }}"
+#     sddc_manager_password: "{{ sddc_manager_password }}"
+#     avns_payload: "{{ avns_payload }}"
+#   when: result is succeeded

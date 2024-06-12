@@ -128,7 +128,6 @@ class SddcManagerApiClient:
 
         #self.api_extension = api_extension
         sddc_manager_url = f"{self.url}/{self.api_extension}"
-        
         ####################################
         # Get Token
         ####################################
@@ -145,7 +144,7 @@ class SddcManagerApiClient:
             self.logger.debug(log_line_pre)
             response = requests.request(method=http_method, url=sddc_manager_url, headers=headers,
                                         verify=self.ssl_verify,  data=sddc_management_domain_payload)
-
+            
         except requests.exceptions.RequestException as e:
             self.logger.error(msg=(str(e)))
             raise VcfAPIException(f"Error: {e}")    
