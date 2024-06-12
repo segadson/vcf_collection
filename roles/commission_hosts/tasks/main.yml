@@ -4,7 +4,7 @@
     sddc_manager_ip: "{{ sddc_manager_ip }}"
     sddc_manager_user: "{{ sddc_manager_username }}"
     sddc_manager_password: "{{ sddc_manager_password }}"
-    hostsSpec: "{{ hostsSpec }}"
+    hosts_list_payload: "{{ hostsSpec }}"
     state: commission
     validate: True
   register: result
