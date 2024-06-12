@@ -1,5 +1,5 @@
   - name: Create SDDC Managment Domain Validation
-    cloud_builder_sddc_validation:
+    sddc_manager_nsxt_edge_cluster:
       cloud_builder_ip: "{{ cloud_builder_ip }}"
       cloud_builder_user: "{{ cloud_builder_username }}"
       cloud_builder_password: "{{ cloud_builder_password }}"

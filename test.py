@@ -17,7 +17,7 @@ def get_sddc_manager_token(url, sddc_manager_user, sddc_manager_password) -> str
         "password": sddc_manager_password
     }
     try:
-        response = requests.post(url=sddc_manager_url, headers=headers, json=json.dumps(payload)S, verify=False)
+        response = requests.post(url=sddc_manager_url, headers=headers, json=payload, verify=False)
         print(response)
     except requests.exceptions.RequestException as e:
         logging.error(f"Error: {e}")
