@@ -1,0 +1,13 @@
+---
+- name: Create SDDC Edge Cluster Management Domain
+  hosts: localhost
+  vars_files:
+    - vars/mgmt_domain_edge_cluster.yml
+  roles:
+    - role: create_nsx_edge_cluster
+      vars:
+        create_edge_cluster_sddc_manager_ip: "{{ sddc_manager_ip }}"
+        create_edge_cluster_sddc_manager_username: "{{ sddc_manager_username }}"
+        create_edge_cluster_sddc_manager_password: "{{ sddc_manager_password }}"
+        create_edge_cluster_sddc_management_domain_payload: "{{ sddc_management_domain_payload }}"
+        create_edge_cluster_management_cluster_name: "{{ management_cluster_name }}" 

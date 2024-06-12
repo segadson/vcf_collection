@@ -100,6 +100,8 @@ class SddcManagerApiClient:
         }
         try:
             response = requests.post(url=sddc_manager_url, headers=headers, json=payload, verify=self.ssl_verify)
+            print(f"Response: {response}")
+            stop
         except requests.exceptions.RequestException as e:
             raise VcfAPIException(f"Error: {e}")    
         try:
