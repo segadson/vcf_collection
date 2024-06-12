@@ -8,8 +8,8 @@ parent_dir = os.path.dirname(current_dir)
 sys.path.append(parent_dir)
 
 from ansible.module_utils.basic import *
-from module_utils.sddc_manager import SddcManagerApiClient
-from module_utils.exceptions import VcfAPIException
+from ansible.module_utils.sddc_manager import SddcManagerApiClient
+from ansible.module_utils.exceptions import VcfAPIException
 from datetime import datetime
 import time
 import json
@@ -56,106 +56,79 @@ def main():
             return []  # return an empty list when resultStatus is not 'FAILED'
         
     def evaluate_validation_status(payload_data):
-        if payload_data['resultStatus'] == 'FAILED':
-            validation_list = payload_data['validationChecks']
+        if payload_data['executionStatus'] == 'FAILED':
+            validation_check_list = payload_data['validationChecks']
             error_check_list = []
-            for validation in validation_list:
-                if validation['resultStatus'].upper() == 'FAILED':
-                    error_check_list.append(validation)
-            return error_check_list
+            for validation_check in validation_check_list:
+                if validation_check['resultStatus'] == 'FAILED':
+                    error_check_list.append(validation_check)
+
+            module.fail_json(changed=False, meta=error_check_list)
         else:
-            return []  # return an empty list when resultStatus is not 'FAILED'
+            module.exit_json(changed=False, meta=payload_data) # return an empty list when resultStatus is not 'FAILED'
         
     if validation == True and sddc_manager_tasks_type == 'nsxt_edge_cluster':
         try:
-            
             api_client = SddcManagerApiClient(sddc_manager_ip, sddc_manager_user, sddc_manager_password)
             api_response = api_client.edge_cluster_validation_status(tasks_id)
-            payload_data = api_response
+            payload_data = api_response.data
             error_check_list = evaluate_validation_status(payload_data)
-            if error_check_list:
-                module.fail_json(changed=False, meta=payload_data)
-            else:
-                module.exit_json(changed=False, meta=payload_data)
+
         except VcfAPIException as e:
             module.fail_json(changed=False, meta=payload_data)
     elif validation == True and sddc_manager_tasks_type == 'avns':
         try:
             api_client = SddcManagerApiClient(sddc_manager_ip, sddc_manager_user, sddc_manager_password)
             api_response = api_client.validate_avns(tasks_id)
-            payload_data = api_response
+            payload_data = api_response.data
             error_check_list = evaluate_validation_status(payload_data)
-            if error_check_list:
-                module.fail_json(changed=False, meta=payload_data)
-            else:
-                module.exit_json(changed=False, meta=payload_data)
         except VcfAPIException as e:
             module.fail_json(changed=False, meta=payload_data)
     elif validation == True and sddc_manager_tasks_type == 'hosts':
         try:
             api_client = SddcManagerApiClient(sddc_manager_ip, sddc_manager_user, sddc_manager_password)
             api_response = api_client.validate_hosts(tasks_id)
-            payload_data = api_response
+            payload_data = api_response.data
             error_check_list = evaluate_validation_status(payload_data)
-            if error_check_list:
-                module.fail_json(changed=False, meta=payload_data)
-            else:
-                module.exit_json(changed=False, meta=payload_data)
         except VcfAPIException as e:
             module.fail_json(changed=False, meta=payload_data)
     elif validation == True and sddc_manager_tasks_type == 'clusters':
         try:
             api_client = SddcManagerApiClient(sddc_manager_ip, sddc_manager_user, sddc_manager_password)
             api_response = api_client.validate_clusters(tasks_id)
-            payload_data = api_response
+            payload_data = api_response.data
             error_check_list = evaluate_validation_status(payload_data)
-            if error_check_list:
-                module.fail_json(changed=False, meta=payload_data)
-            else:
-                module.exit_json(changed=False, meta=payload_data)
         except VcfAPIException as e:
             module.fail_json(changed=False, meta=payload_data)
     elif validation == True and sddc_manager_tasks_type == 'cluster_datastore':
         try:
             api_client = SddcManagerApiClient(sddc_manager_ip, sddc_manager_user, sddc_manager_password)
             api_response = api_client.validate_mount_datastore_on_cluster(tasks_id)
-            payload_data = api_response
+            payload_data = api_response.data
             error_check_list = evaluate_validation_status(payload_data)
-            if error_check_list:
-                module.fail_json(changed=False, meta=payload_data)
-            else:
-                module.exit_json(changed=False, meta=payload_data)
         except VcfAPIException as e:
             module.fail_json(changed=False, meta=payload_data)
     elif validation == True and sddc_manager_tasks_type == 'wld_domain':
         try:
             api_client = SddcManagerApiClient(sddc_manager_ip, sddc_manager_user, sddc_manager_password)
             api_response = api_client.validate_domains(tasks_id)
-            payload_data = api_response
+            payload_data = api_response.data
             error_check_list = evaluate_validation_status(payload_data)
-            if error_check_list:
-                module.fail_json(changed=False, meta=payload_data)
-            else:
-                module.exit_json(changed=False, meta=payload_data)
         except VcfAPIException as e:
             module.fail_json(changed=False, meta=payload_data)
     elif validation == True and sddc_manager_tasks_type == 'sddc_upgrade':
         try:
             api_client = SddcManagerApiClient(sddc_manager_ip, sddc_manager_user, sddc_manager_password)
             api_response = api_client.perform_sddc_manager_upgrade_prechecks(tasks_id)
-            payload_data = api_response
+            payload_data = api_response.data
             error_check_list = evaluate_validation_status(payload_data)
-            if error_check_list:
-                module.fail_json(changed=False, meta=payload_data)
-            else:
-                module.exit_json(changed=False, meta=payload_data)
         except VcfAPIException as e:
             module.fail_json(changed=False, meta=payload_data)
     elif validation == False:
         try:
             api_client = SddcManagerApiClient(sddc_manager_ip, sddc_manager_user, sddc_manager_password)
             api_response = api_client.get_sddc_manager_task_by_id(tasks_id)
-            payload_data = api_response
+            payload_data = api_response.data
             failed_tasks = evaluate_tasks_status(payload_data)
             if failed_tasks:
                 module.fail_json(changed=False, meta=payload_data)

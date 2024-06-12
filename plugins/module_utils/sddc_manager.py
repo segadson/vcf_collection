@@ -120,11 +120,11 @@ class SddcManagerApiClient:
 
     def sddc_operations(self, http_method: str, sddc_management_domain_payload: str = None):
 
-        if sddc_management_domain_payload is not type(str):
-            sddc_management_domain_payload = json.dumps(sddc_management_domain_payload)
+        # if sddc_management_domain_payload is not type(str):
+        #     sddc_management_domain_payload = json.dumps(sddc_management_domain_payload)
 
-        elif http_method in ["POST", "PATCH"] and sddc_management_domain_payload is None:
-            raise VcfAPIException("Payload is required for POST or PATCH requests")
+        # elif http_method in ["POST", "PATCH"] and sddc_management_domain_payload is None:
+        #     raise VcfAPIException("Payload is required for POST or PATCH requests")
 
         #self.api_extension = api_extension
         sddc_manager_url = f"{self.url}/{self.api_extension}"
@@ -141,7 +141,6 @@ class SddcManagerApiClient:
 
         log_line_pre = f"method={http_method}, url={sddc_manager_url}"
         log_line_post = ', '.join((log_line_pre, "success={}, status_code={}, message={}"))
-        
         try:
             self.logger.debug(log_line_pre)
             response = requests.request(method=http_method, url=sddc_manager_url, headers=headers,

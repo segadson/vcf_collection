@@ -79,13 +79,12 @@ def main():
         current_state = get_host_cluster_by_name(sddc_manager_ip, sddc_manager_user, sddc_manager_password, management_cluster_name)
         mgmt_cluster_id = current_state['id']
         for cluster in edge_cluster_payload['edgeNodeSpecs']:
-            cluster['clusterId'] = mgmt_cluster_id['id']
-        print(edge_cluster_payload)
+            cluster['clusterId'] = mgmt_cluster_id
         try:
             api_client = SddcManagerApiClient(sddc_manager_ip, sddc_manager_user, sddc_manager_password)
             api_response = api_client.validate_edge_cluster(json.dumps(edge_cluster_payload))
             payload_data = api_response.data
-            module.exit_json(changed=True, meta=payload_data)
+            module.exit_json(changed=False, meta=payload_data)
         except VcfAPIException as e:
             module.fail_json(msg=f"Error: {e}")
 
@@ -121,7 +120,7 @@ def main():
             api_client = SddcManagerApiClient(sddc_manager_ip, sddc_manager_user, sddc_manager_password)
             api_response = api_client.validate_edge_cluster(edge_cluster_id, json.dumps(edge_cluster_payload))
             payload_data = api_response.data
-            module.exit_json(changed=True, meta=payload_data)
+            module.exit_json(changed=False, meta=payload_data)
         except VcfAPIException as e:
             module.fail_json(msg=f"Error: {e}")
 
