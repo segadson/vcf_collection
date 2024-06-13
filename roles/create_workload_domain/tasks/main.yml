@@ -6,23 +6,17 @@
     sddc_manager_password: "{{ sddc_manager_password }}"
     license_key: "{{ license_key }}"
     nsx_license_key: "{{ nsx_license_key }}"
+    vsan_license_key: "{{ vsan_license_key }}"
+    hostsSpec: "{{ hostsSpec }}"
     state: "validate"
     workload_domain_payload: "{{ workload_domain_payload }}"
   register: result
+  failed_when: result.meta.message != "Successful"
 
-# - name: Monitor validation status
-#   sddc_manager_tasks_status:
-#     sddc_manager_ip: "{{ sddc_manager_ip }}"
-#     sddc_manager_user: "{{ sddc_manager_username }}"
-#     sddc_manager_password: "{{ sddc_manager_password }}"
-#     task_id: "{{ result.task_id }}"
-#   register: result
-#   until: result.meta.executionStatus == 'COMPLETED'
-#   retries: 60
-#   delay: 10
-#   failed_when: result.meta.executionStatus == "FAILED"
+- debug:
+    msg: "Workload Domain Validation Status: {{ result }}"
 
-  
+ 
 # - name: Create workload domain
 #   sddc_manager_workload_domain:
 #     sddc_manager_ip: "{{ sddc_manager_ip }}"
@@ -30,6 +24,8 @@
 #     sddc_manager_password: "{{ sddc_manager_password }}"
 #     license_key: "{{ license_key }}"
 #     nsx_license_key: "{{ nsx_license_key }}"
+#     vsan_license_key: "{{ vsan_license_key }}"
+#     hostsSpec: "{{ hostsSpec }}"
 #     state: "create"
 #     workload_domain_payload: "{{ workload_domain_payload }}"
 #     validate: False

@@ -53,3 +53,31 @@ payload = {
 }
 response = requests.post(url="https://sddc-manager.vcf.sddc.lab/v1/avns/validations", headers={"Authorization": f"Bearer {token}"}, data=json.dumps(payload),verify=False)
 print(response)
+
+    # def print_dict_diff(dict1, dict2, path=""):
+    #     for key in dict1.keys():
+    #         if key in dict2:
+    #             if isinstance(dict1[key], dict) and isinstance(dict2[key], dict):
+    #                 print_dict_diff(dict1[key], dict2[key], path + str(key) + " -> ")
+    #             elif dict1[key] == dict2[key]:
+    #                 pass
+    #             else:
+    #                 print("Key:", path + str(key))
+    #                 print("Dict1 value:", dict1[key])
+    #                 print("Dict2 value:", dict2[key])
+    #                 print("---")
+    #         else:
+    #             print("Key:", path + str(key))
+    #             print("Dict1 value:", dict1[key])
+    #             print("Dict2 value: Does not exist")
+    #             print("---")
+
+    #     for key in dict2.keys():
+    #         if key not in dict1:
+    #             print("Key:", path + str(key))
+    #             print("Dict1 value: Does not exist")
+    #             print("Dict2 value:", dict2[key])
+    #             print("---")
+        #module.log(msg=f"Workload Domain Payload: {json.dumps(updated_workload_domain_payload)}")
+        # print_dict_diff(updated_workload_domain_payload, correct_payload)    
+        # stop

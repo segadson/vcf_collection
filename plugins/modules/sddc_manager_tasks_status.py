@@ -24,7 +24,7 @@ def main():
         "tasks_id": {"required": True, "type": "str"},
         "sddc_manager_user": {"required": True, "type": "str"},
         "sddc_manager_password": {"required": True, "type": "str", "no_log": True},
-        "validation": {"type": "bool", "default": False},
+        "validation": {"type": "bool", "required": True},
         "sddc_manager_tasks_type": {
             "required": True, 
             "type": "str",
@@ -106,13 +106,13 @@ def main():
             error_check_list = evaluate_validation_status(payload_data)
         except VcfAPIException as e:
             module.fail_json(changed=False, meta=payload_data)
-    elif validation == True and sddc_manager_tasks_type == 'wld_domain':
-        try:
-            api_client = SddcManagerApiClient(sddc_manager_ip, sddc_manager_user, sddc_manager_password)
-            api_response = api_client.validate_domains(tasks_id)
-            payload_data = api_response.data
-            error_check_list = evaluate_validation_status(payload_data)
-        except VcfAPIException as e:
+    # elif validation == True and sddc_manager_tasks_type == 'wld_domain':
+    #     try:
+    #         api_client = SddcManagerApiClient(sddc_manager_ip, sddc_manager_user, sddc_manager_password)
+    #         api_response = api_client.get_domain_validation_status(tasks_id)
+    #         payload_data = api_response.data
+    #         error_check_list = evaluate_validation_status(payload_data)
+    #     except VcfAPIException as e:
             module.fail_json(changed=False, meta=payload_data)
     elif validation == True and sddc_manager_tasks_type == 'sddc_upgrade':
         try:

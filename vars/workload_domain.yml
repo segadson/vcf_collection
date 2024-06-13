@@ -4,6 +4,7 @@ sddc_manager_username: "administrator@vsphere.local"
 sddc_manager_password: "VMware123!"
 license_key: J54A4-ZE1EL-J8JNT-0W3U0-90D50
 nsx_license_key: HJ42M-VN0DP-V82D2-0V306-8N82M
+vsan_license_key: X043F-TDPDN-J8ANH-LYJ8C-AR5NV
 workload_domain_payload:
   domainName: WLD-01
   vcenterSpec:
@@ -67,6 +68,6 @@ workload_domain_payload:
         subnetMask: 255.255.255.0
     vip: 10.0.0.51
     vipFqdn: nsx-wld.vcf.sddc.lab
-    licenseKey: ''
+    licenseKey: HJ42M-VN0DP-V82D2-0V306-8N82M
     nsxManagerAdminPassword: VMware123!VMware123!
     formFactor: medium

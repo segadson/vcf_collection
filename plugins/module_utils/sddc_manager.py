@@ -355,6 +355,10 @@ class SddcManagerApiClient:
     def validate_domains(self, domain_payload: str = None) -> List[Dict]:
         self.api_extension = f"domains/validations"
         return self.sddc_operations("POST", domain_payload)
+    
+    def get_domain_validation_status(self,  resource_id: str = None) -> List[Dict]:
+        self.api_extension = f"domains/validations/{resource_id}"
+        return self.sddc_operations("GET")
 
     def create_domains(self,domain_payload: str = None) -> List[Dict]:
         self.api_extension = f"domains"
