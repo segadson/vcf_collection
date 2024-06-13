@@ -93,7 +93,7 @@ def main():
             api_client = SddcManagerApiClient(sddc_manager_ip, sddc_manager_user, sddc_manager_password)
             api_response = api_client.create_domains(updated_workload_domain_payload)
             payload_data = api_response["data"]
-            module.exit_json(changed=False, meta=payload_data)
+            module.exit_json(changed=True, meta=payload_data)
         except:
             module.fail_json(msg="Failed to create workload domain")
     elif state == 'update':
@@ -103,7 +103,7 @@ def main():
             api_client = SddcManagerApiClient(sddc_manager_ip, sddc_manager_user, sddc_manager_password)
             api_response = api_client.update_domains(updated_workload_domain_payload)
             payload_data = api_response["data"]
-            module.exit_json(changed=False, meta=payload_data)
+            module.exit_json(changed=True, meta=payload_data)
         except:
             module.fail_json(msg="Failed to update workload domain")
     elif state == 'delete':
@@ -117,7 +117,7 @@ def main():
             api_client = SddcManagerApiClient(sddc_manager_ip, sddc_manager_user, sddc_manager_password)
             api_response = api_client.delete_domains(updated_workload_domain_payload)
             payload_data = api_response["data"]
-            module.exit_json(changed=False, meta=payload_data)
+            module.exit_json(changed=True, meta=payload_data)
         except:
             module.fail_json(msg="Failed to delete workload domain")
     
