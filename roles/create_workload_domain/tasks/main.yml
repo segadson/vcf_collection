@@ -2,7 +2,7 @@
 - name: Validate workload domain
   sddc_manager_workload_domain:
     sddc_manager_ip: "{{ sddc_manager_ip }}"
-    sddc_manager_user: "{{ sddc_manager_user }}"
+    sddc_manager_user: "{{ sddc_manager_username }}"
     sddc_manager_password: "{{ sddc_manager_password }}"
     license_key: "{{ license_key }}"
     nsx_license_key: "{{ nsx_license_key }}"
@@ -13,7 +13,7 @@
 # - name: Monitor validation status
 #   sddc_manager_tasks_status:
 #     sddc_manager_ip: "{{ sddc_manager_ip }}"
-#     sddc_manager_user: "{{ sddc_manager_user }}"
+#     sddc_manager_user: "{{ sddc_manager_username }}"
 #     sddc_manager_password: "{{ sddc_manager_password }}"
 #     task_id: "{{ result.task_id }}"
 #   register: result
@@ -26,7 +26,7 @@
 # - name: Create workload domain
 #   sddc_manager_workload_domain:
 #     sddc_manager_ip: "{{ sddc_manager_ip }}"
-#     sddc_manager_user: "{{ sddc_manager_user }}"
+#     sddc_manager_user: "{{ sddc_manager_username }}"
 #     sddc_manager_password: "{{ sddc_manager_password }}"
 #     license_key: "{{ license_key }}"
 #     nsx_license_key: "{{ nsx_license_key }}"
