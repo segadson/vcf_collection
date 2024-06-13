@@ -10,51 +10,51 @@
     workload_domain_payload: "{{ workload_domain_payload }}"
   register: result
 
-- name: Monitor validation status
-  sddc_manager_tasks_status:
-    sddc_manager_ip: "{{ sddc_manager_ip }}"
-    sddc_manager_user: "{{ sddc_manager_user }}"
-    sddc_manager_password: "{{ sddc_manager_password }}"
-    task_id: "{{ result.task_id }}"
-  register: result
-  until: result.meta.executionStatus == 'COMPLETED'
-  retries: 60
-  delay: 10
-  failed_when: result.meta.executionStatus == "FAILED"
+# - name: Monitor validation status
+#   sddc_manager_tasks_status:
+#     sddc_manager_ip: "{{ sddc_manager_ip }}"
+#     sddc_manager_user: "{{ sddc_manager_user }}"
+#     sddc_manager_password: "{{ sddc_manager_password }}"
+#     task_id: "{{ result.task_id }}"
+#   register: result
+#   until: result.meta.executionStatus == 'COMPLETED'
+#   retries: 60
+#   delay: 10
+#   failed_when: result.meta.executionStatus == "FAILED"
 
   
-- name: Create workload domain
-  sddc_manager_workload_domain:
-    sddc_manager_ip: "{{ sddc_manager_ip }}"
-    sddc_manager_user: "{{ sddc_manager_user }}"
-    sddc_manager_password: "{{ sddc_manager_password }}"
-    license_key: "{{ license_key }}"
-    nsx_license_key: "{{ nsx_license_key }}"
-    state: "create"
-    workload_domain_payload: "{{ workload_domain_payload }}"
-    validate: False
-  register: result
+# - name: Create workload domain
+#   sddc_manager_workload_domain:
+#     sddc_manager_ip: "{{ sddc_manager_ip }}"
+#     sddc_manager_user: "{{ sddc_manager_user }}"
+#     sddc_manager_password: "{{ sddc_manager_password }}"
+#     license_key: "{{ license_key }}"
+#     nsx_license_key: "{{ nsx_license_key }}"
+#     state: "create"
+#     workload_domain_payload: "{{ workload_domain_payload }}"
+#     validate: False
+#   register: result
     
-- set_fact:
-    workload_domain_id: "{{ result.meta.id }}"
+# - set_fact:
+#     workload_domain_id: "{{ result.meta.id }}"
 
-- debug:
-    msg: "Workload Domain Creation ID: {{ workload_domain_id }}"
+# - debug:
+#     msg: "Workload Domain Creation ID: {{ workload_domain_id }}"
 
 
-- name: Wait for Edge Cluster to be ready
-  sddc_manager_tasks_status:
-    sddc_manager_ip: "{{ sddc_manager_ip }}"
-    sddc_manager_user: "{{ sddc_manager_username }}"
-    sddc_manager_password: "{{ sddc_manager_password }}"
-    tasks_id: "{{ workload_domain_id }}"
-    sddc_manager_tasks_type: wld_domain
-    validation: False
-  register: result
-  until: result.meta.status == 'Successful'
-  retries: 60
-  delay: 10
-  failed_when: result.meta.status == "FAILED"
+# - name: Wait for Edge Cluster to be ready
+#   sddc_manager_tasks_status:
+#     sddc_manager_ip: "{{ sddc_manager_ip }}"
+#     sddc_manager_user: "{{ sddc_manager_username }}"
+#     sddc_manager_password: "{{ sddc_manager_password }}"
+#     tasks_id: "{{ workload_domain_id }}"
+#     sddc_manager_tasks_type: wld_domain
+#     validation: False
+#   register: result
+#   until: result.meta.status == 'Successful'
+#   retries: 60
+#   delay: 10
+#   failed_when: result.meta.status == "FAILED"
 
-- debug:
-    msg: "Workload Domain Created"
+# - debug:
+#     msg: "Workload Domain Created"
