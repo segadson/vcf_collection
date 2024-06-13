@@ -24,7 +24,7 @@
     sddc_manager_tasks_type: hosts
     validation: True
   register: result
-  until: result.meta.executionStatus == 'COMPLETED'
+  until: result.meta.executionStatus == 'COMPLETED' #change the key to read from
   retries: 60
   delay: 10
   failed_when: result.meta.executionStatus == "FAILED"
