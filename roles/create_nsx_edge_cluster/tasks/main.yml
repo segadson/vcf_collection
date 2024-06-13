@@ -59,7 +59,7 @@
     sddc_manager_tasks_type: nsxt_edge_cluster
     validation: False
   register: result
-  until: result.meta.status == 'COMPLETED'
+  until: result.meta.status == 'Successful'
   retries: 60
   delay: 10
   failed_when: result.meta.status == "FAILED"

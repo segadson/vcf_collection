@@ -29,38 +29,38 @@
   delay: 10
   failed_when: result.meta.executionStatus == "FAILED"
 
-# - debug:
-#     msg: "Creating Host Commission"
+- debug:
+    msg: "Creating Host Commission"
 
-# - name: Create Host Commission
-#   sddc_manager_host_commisson:
-#     sddc_manager_ip: "{{ sddc_manager_ip }}"
-#     sddc_manager_user: "{{ sddc_manager_username }}"
-#     sddc_manager_password: "{{ sddc_manager_password }}"
-#     hosts_commission_payload: "{{ hosts_commission_payload }}"
-#     state: create
-#     validate: False
-#   register: result
+- name: Create Host Commission
+  sddc_manager_host_commisson:
+    sddc_manager_ip: "{{ sddc_manager_ip }}"
+    sddc_manager_user: "{{ sddc_manager_username }}"
+    sddc_manager_password: "{{ sddc_manager_password }}"
+    hosts_list_payload: "{{ hostsSpec }}"
+    state: commission
+    validate: False
+  register: result
     
-# - set_fact:
-#     hosts_commission_id: "{{ result.meta.id }}"
+- set_fact:
+    hosts_commission_id: "{{ result.meta.id }}"
 
-# - debug:
-#     msg: "Host Commission Creation ID: {{ hosts_commission_id }}"
+- debug:
+    msg: "Host Commission Creation ID: {{ hosts_commission_id }}"
 
-# - name: Wait for Host Commission to be ready
-#   sddc_manager_tasks_status:
-#     sddc_manager_ip: "{{ sddc_manager_ip }}"
-#     sddc_manager_user: "{{ sddc_manager_username }}"
-#     sddc_manager_password: "{{ sddc_manager_password }}"
-#     tasks_id: "{{ hosts_commission_id }}"
-#     sddc_manager_tasks_type: hosts
-#     validation: False
-#   register: result
-#   until: result.meta.status == 'COMPLETED'
-#   retries: 60
-#   delay: 10
-#   failed_when: result.meta.status == "FAILED"
+- name: Wait for Host Commission to be ready
+  sddc_manager_tasks_status:
+    sddc_manager_ip: "{{ sddc_manager_ip }}"
+    sddc_manager_user: "{{ sddc_manager_username }}"
+    sddc_manager_password: "{{ sddc_manager_password }}"
+    tasks_id: "{{ hosts_commission_id }}"
+    sddc_manager_tasks_type: hosts
+    validation: False
+  register: result
+  until: result.meta.status == 'Successful'
+  retries: 60
+  delay: 10
+  failed_when: result.meta.status == "FAILED"
 
-# - debug:
-#     msg: "Host Commission Created"
+- debug:
+    msg: "Host Commission Created"
