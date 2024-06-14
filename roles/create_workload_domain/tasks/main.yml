@@ -40,16 +40,16 @@
     msg: "Workload Domain Creation ID: {{ workload_domain_id }}"
 
 #switch to upper
-- name: Wait for Edge Cluster to be ready
+- name: Wait for Workload Domain
   sddc_manager_tasks_status:
     sddc_manager_ip: "{{ sddc_manager_ip }}"
     sddc_manager_user: "{{ sddc_manager_username }}"
     sddc_manager_password: "{{ sddc_manager_password }}"
-    tasks_id: "{{ workload_domain_id }}"
+    tasks_id: c8667384-7db4-4752-8d09-993e046fc5e0
     sddc_manager_tasks_type: wld_domain
     validation: False
   register: result
-  until: result.meta.status == 'Successful'
+  until: result.meta.status == 'Successful' or result.meta.status == 'Failed'
   retries: 60
   delay: 10
   failed_when: result.meta.status == "Failed"

@@ -30,8 +30,8 @@
       cloud_builder_password: "{{ cloud_builder_password }}"
       sddc_id: "{{ sddc_id }}"
     register: result
-    until: result.meta.executionStatus == "COMPLETED"
-    retries: 60
+    until: result.meta.executionStatus == "COMPLETED" or result.meta.executionStatus == "FAILED"
+    retries: 60 
     delay: 30
     failed_when: result.meta.executionStatus == "FAILED"
 
@@ -62,9 +62,10 @@
       cloud_builder_password: "{{ cloud_builder_password }}"
       sddc_id: "{{ sddc_id }}"
     register: sddc_managment_domain
-    until: sddc_managment_domain.meta.status == "COMPLETED_WITH_SUCCESS"
+    until: sddc_managment_domain.meta.status == "COMPLETED_WITH_SUCCESS" or sddc_managment_domain.meta.status == "COMPLETED_WITH_FAILURE"  
     retries: 60
     delay: 30
+    failed_when: sddc_managment_domain.meta.status == "COMPLETED_WITH_FAILURE"  
 
   - debug:
       msg: "SDDC Managment Domain ID: {{ sddc_managment_domain.meta.id  }} Has Completed With Success"

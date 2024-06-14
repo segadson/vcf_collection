@@ -2,7 +2,7 @@
 sddc_manager_ip: "sddc-manager.vcf.sddc.lab"
 sddc_manager_username: "administrator@vsphere.local"
 sddc_manager_password: "VMware123!"
-license_key: 550KF-QUT17-58MC8-L2CUP-A0X1J
+license_key: J54A4-ZE1EL-J8JNT-0W3U0-90D50
 nsx_license_key: HJ42M-VN0DP-V82D2-0V306-8N82M
 vsan_license_key: N02F6-XDX46-586N0-LDKA2-GJ4JT
 workload_domain_payload:

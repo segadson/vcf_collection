@@ -24,7 +24,7 @@
     sddc_manager_tasks_type: hosts
     validation: True
   register: result
-  until: result.meta.executionStatus == 'COMPLETED' #change the key to read from
+  until: result.meta.executionStatus == 'COMPLETED' result.meta.resultStatus == "FAILED" #change the key to read from
   retries: 60
   delay: 10
   failed_when: result.meta.resultStatus == "FAILED"
@@ -57,10 +57,10 @@
     sddc_manager_tasks_type: hosts
     validation: False
   register: result
-  until: result.meta.status == 'Successful'
+  until: result.meta.status == 'Successful' or result.meta.status == 'Failed'
   retries: 60
   delay: 10
-  failed_when: result.meta.status == "FAILED"
+  failed_when: result.meta.status == "Failed"
 
 - debug:
     msg: "Host Commission Created"
