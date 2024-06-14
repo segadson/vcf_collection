@@ -120,8 +120,8 @@ def main():
             api_response = api_client.create_domains(json.dumps(updated_workload_domain_payload))
             payload_data = api_response.data
             module.exit_json(changed=True, meta=payload_data)
-        except:
-            module.fail_json(msg="Failed to create workload domain")
+        except Exception as e:
+            module.fail_json(msg="Failed to create workload domain", exception=str(e), stdout=e.stdout if hasattr(e, 'stdout') else None, stderr=e.stderr if hasattr(e, 'stderr') else None)
     elif state == 'update':
         updated_workload_domain_payload = create_workload_domain_payload(workload_domain_payload, hostsSpec)
         updated_workload_domain_payload['nsxTSpec']['licenseKey'] = nsx_license_key
