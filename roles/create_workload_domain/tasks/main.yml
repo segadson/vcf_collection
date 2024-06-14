@@ -39,7 +39,7 @@
 - debug:
     msg: "Workload Domain Creation ID: {{ workload_domain_id }}"
 
-
+#switch to upper
 - name: Wait for Edge Cluster to be ready
   sddc_manager_tasks_status:
     sddc_manager_ip: "{{ sddc_manager_ip }}"
@@ -52,7 +52,7 @@
   until: result.meta.status == 'Successful'
   retries: 60
   delay: 10
-  failed_when: result.meta.status == "FAILED"
+  failed_when: result.meta.status == "Failed"
 
 - debug:
     msg: "Workload Domain Created"

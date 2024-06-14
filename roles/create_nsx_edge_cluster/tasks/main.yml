@@ -62,7 +62,7 @@
   until: result.meta.status == 'Successful'
   retries: 60
   delay: 10
-  failed_when: result.meta.status == "FAILED"
+  failed_when: result.meta.status == "Failed"
 
 - debug:
     msg: "NSX Edge Cluster Created"
