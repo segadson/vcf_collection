@@ -11,7 +11,7 @@
     state: "validate"
     workload_domain_payload: "{{ workload_domain_payload }}"
   register: result
-  failed_when: result.meta.message != "Successful"
+  failed_when: result.meta.resultStatus != "SUCCEEDED"
 
 - debug:
     msg: "Workload Domain Validation Status: {{ result }}"
@@ -30,7 +30,10 @@
 #     workload_domain_payload: "{{ workload_domain_payload }}"
 #     validate: False
 #   register: result
-    
+
+# - debug:
+#     msg: "Workload Domain Creation Status: {{ result }}"
+
 # - set_fact:
 #     workload_domain_id: "{{ result.meta.id }}"
 
