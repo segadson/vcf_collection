@@ -19,6 +19,149 @@ import yaml
 
 #Todo Documentation
 
+correct_payload = {
+  "domainName": "WLD-01",
+  "vcenterSpec": {
+    "name": "vcenter-wld",
+    "networkDetailsSpec": {
+      "ipAddress": "10.0.0.50",
+      "dnsName": "vcenter-wld.vcf.sddc.lab",
+      "gateway": "10.0.0.221",
+      "subnetMask": "255.255.255.0"
+    },
+    "rootPassword": "VMware123!",
+    "datacenterName": "WLD-01-DC01",
+    "vmSize": "tiny",
+    "storageSize": "lstorage"
+  },
+  "computeSpec": {
+    "clusterSpecs": [
+      {
+        "name": "wld01-c01",
+        "hostSpecs": [
+          {
+            "id": "49443bf0-5baf-4a7e-999d-16b43ae418cc",
+            "licenseKey": "J54A4-ZE1EL-J8JNT-0W3U0-90D50",
+            "hostNetworkSpec": {
+              "vmNics": [
+                {
+                  "id": "vmnic0",
+                  "vdsName": "wld01-c01-vds01"
+                },
+                {
+                  "id": "vmnic1",
+                  "vdsName": "wld01-c01-vds01"
+                }
+              ]
+            }
+          },
+          {
+            "id": "cd40f289-d086-4213-a00d-f51660069973",
+            "licenseKey": "J54A4-ZE1EL-J8JNT-0W3U0-90D50",
+            "hostNetworkSpec": {
+              "vmNics": [
+                {
+                  "id": "vmnic0",
+                  "vdsName": "wld01-c01-vds01"
+                },
+                {
+                  "id": "vmnic1",
+                  "vdsName": "wld01-c01-vds01"
+                }
+              ]
+            }
+          },
+          {
+            "id": "a73259be-acbc-4af7-b7c5-9bcc97e334bf",
+            "licenseKey": "J54A4-ZE1EL-J8JNT-0W3U0-90D50",
+            "hostNetworkSpec": {
+              "vmNics": [
+                {
+                  "id": "vmnic0",
+                  "vdsName": "wld01-c01-vds01"
+                },
+                {
+                  "id": "vmnic1",
+                  "vdsName": "wld01-c01-vds01"
+                }
+              ]
+            }
+          }
+        ],
+        "datastoreSpec": {
+          "vsanDatastoreSpec": {
+            "failuresToTolerate": 1,
+            "licenseKey": "X043F-TDPDN-J8ANH-LYJ8C-AR5NV",
+            "datastoreName": "wld-vsan01"
+          }
+        },
+        "networkSpec": {
+          "vdsSpecs": [
+            {
+              "name": "wld01-c01-vds01",
+              "portGroupSpecs": [
+                {
+                  "name": "wld01-c01-vds01-pg-mgmt",
+                  "transportType": "MANAGEMENT"
+                },
+                {
+                  "name": "wld01-c01-vds01-pg-vmotion",
+                  "transportType": "VMOTION"
+                },
+                {
+                  "name": "wld01-c01-vds01-pg-vsan",
+                  "transportType": "VSAN"
+                }
+              ]
+	    }
+           ],
+           "nsxClusterSpec": {
+             "nsxTClusterSpec": {
+               "geneveVlanId": 0
+             }
+           }
+         }
+       }
+     ]
+   },
+  "nsxTSpec": {
+    "nsxManagerSpecs": [
+      {
+        "name": "nsx1-wld",
+        "networkDetailsSpec": {
+          "ipAddress": "10.0.0.52",
+          "dnsName": "nsx1-wld.vcf.sddc.lab",
+          "gateway": "10.0.0.221",
+          "subnetMask": "255.255.255.0"
+        }
+      },
+      {
+        "name": "nsx2-wld",
+        "networkDetailsSpec": {
+          "ipAddress": "10.0.0.53",
+          "dnsName": "nsx2-wld.vcf.sddc.lab",
+          "gateway": "10.0.0.221",
+          "subnetMask": "255.255.255.0"
+        }
+      },
+      {
+        "name": "nsx3-wld",
+        "networkDetailsSpec": {
+          "ipAddress": "10.0.0.54",
+          "dnsName": "nsx3-wld.vcf.sddc.lab",
+          "gateway": "10.0.0.221",
+          "subnetMask": "255.255.255.0"
+        }
+      }
+    ],
+    "vip": "10.0.0.51",
+    "vipFqdn": "nsx-wld.vcf.sddc.lab",
+    "licenseKey": "HJ42M-VN0DP-V82D2-0V306-8N82M",
+    "nsxManagerAdminPassword": "VMware123!VMware123!",
+    "formFactor": "medium"
+  }
+}
+
 def main():
     parameters = dict(
     sddc_manager_ip=dict(type='str', required=True),
@@ -58,7 +201,6 @@ def main():
         except Exception as e:
             module.fail_json(msg="Failed to get host by name: " + str(e))
 
-    #Todo: Clean This up
     def create_workload_domain_payload(workload_domain_payload, hostsSpec):
         clusters = workload_domain_payload['computeSpec']['clusterSpecs']
         host_specs = []

@@ -46,19 +46,7 @@ def create_avns_(sddc_manager_ip, sddc_manager_user, sddc_manager_password, avns
         return payload_data
     except VcfAPIException as e:
         raise VcfAPIException(f"Error: {e}")
-        
-        #Mimic This
-        # try:
-        #     api_client = SddcManagerApiClient(sddc_manager_ip, sddc_manager_user, sddc_manager_password)
-        #     api_response = api_client.validate_domains(json.dumps(updated_workload_domain_payload))
-        #     payload_data = api_response.data
-        #     response = evaluate_response(payload_data)
-        #     if response['message'] == "Successful":
-        #         module.exit_json(changed=False, meta=payload_data)
-        #     else:
-        #         module.fail_json(msg="Workload Domain Validation Has Failed", meta=response)
-        # except Exception as e:
-        #     module.fail_json(msg="Failed to validate workload domain: " + str(e))
+
 def validate_avns_(sddc_manager_ip, sddc_manager_user, sddc_manager_password, avns_payload):
     payload_data = avns_payload
     try:

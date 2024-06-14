@@ -58,7 +58,6 @@ def main():
         except Exception as e:
             module.fail_json(msg="Failed to get host by name: " + str(e))
 
-    #Todo: Clean This up
     def create_workload_domain_payload(workload_domain_payload, hostsSpec):
         clusters = workload_domain_payload['computeSpec']['clusterSpecs']
         host_specs = []
