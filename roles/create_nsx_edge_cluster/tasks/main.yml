@@ -28,7 +28,7 @@
   until: result.meta.executionStatus == 'COMPLETED'
   retries: 60
   delay: 10
-  failed_when: result.meta.executionStatus == "FAILED"
+  failed_when: result.meta.resultStatus == "FAILED"
 
 - debug:
     msg: "Creating NSX Edge Cluster"
