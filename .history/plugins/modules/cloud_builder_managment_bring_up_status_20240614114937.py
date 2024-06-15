@@ -18,59 +18,7 @@ import logging
 import yaml
 
 #Todo Documentation
-DOCUMENTATION = '''
----
-module: cloud_builder_management_bring_up_status
-short_description: This module checks the bring up status of the SDDC in Cloud Builder
-description:
-    - "This module is a wrapper around the Cloud Builder API. It retrieves the bring up status of the SDDC."
-author:
-    - Your Name (@yourusername)
-options:
-    cloud_builder_ip:
-        description:
-            - The IP address of the Cloud Builder.
-        required: true
-        type: str
-    sddc_id:
-        description:
-            - The ID of the SDDC.
-        required: true
-        type: str
-    cloud_builder_user:
-        description:
-            - The username for the Cloud Builder.
-        required: true
-        type: str
-    cloud_builder_password:
-        description:
-            - The password for the Cloud Builder.
-        required: true
-        type: str
-requirements:
-    - python >= 3.6
-'''
 
-EXAMPLES = '''
-# How to use this module in your playbook
-- name: Get SDDC bring up status
-  cloud_builder_management_bring_up_status:
-    cloud_builder_ip: "192.168.1.1"
-    sddc_id: "sddc1"
-    cloud_builder_user: "admin"
-    cloud_builder_password: "password"
-'''
-
-RETURN = '''
-status:
-    description: The bring up status of the SDDC.
-    returned: always
-    type: str
-validation_checks:
-    description: The validation checks performed during the bring up of the SDDC.
-    returned: when status is 'FAILED'
-    type: list
-'''
 def main():
     parameters = {
         "cloud_builder_ip": {"required": True, "type": "str"},
