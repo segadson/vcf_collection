@@ -13,61 +13,6 @@ import logging
 import yaml
 
 #Todo Documentation
-DOCUMENTATION = '''
----
-module: sddc_manager_host_commisson
-short_description: This module manages the commissioning and decommissioning of hosts in SDDC Manager
-description:
-    - "This module is a wrapper around the SDDC Manager hosts API. It allows to commission and decommission hosts."
-author:
-    - Your Name (@yourusername)
-options:
-    sddc_manager_ip:
-        description:
-            - The IP address of the SDDC Manager.
-        required: true
-        type: str
-    sddc_manager_user:
-        description:
-            - The username for the SDDC Manager.
-        required: true
-        type: str
-    sddc_manager_password:
-        description:
-            - The password for the SDDC Manager.
-        required: true
-        type: str
-    hosts_list_payload:
-        description:
-            - The list of hosts to be commissioned or decommissioned.
-        required: true
-        type: list
-    state:
-        description:
-            - The state of the hosts. Choices are 'commission', 'decommission'.
-        required: true
-        type: str
-requirements:
-    - python >= 3.6
-'''
-
-EXAMPLES = '''
-# How to use this module in your playbook
-- name: Commission hosts
-  sddc_manager_host_commisson:
-    sddc_manager_ip: "192.168.1.1"
-    sddc_manager_user: "admin"
-    sddc_manager_password: "password"
-    hosts_list_payload: ["host1", "host2"]
-    state: "commission"
-'''
-
-RETURN = '''
-hosts:
-    description: The hosts that were commissioned or decommissioned.
-    returned: always
-    type: list
-'''
 
 '''
 Commisson Host:
