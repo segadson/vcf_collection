@@ -18,51 +18,6 @@ import logging
 import yaml
 
 #Todo Documentation
-Document = '''
-query: sddc_manager_workload_domain
-short_description: Create, Delete, or Validate Workload Domains
-description:
-    - This module allows you to create, delete, or validate a workload domain in SDDC Manager.
-version_added: "2.9"
-options:
-    sddc_manager_ip:
-        description:
-            - The IP address of the SDDC Manager.
-        required: true
-    sddc_manager_user:
-        description:
-            - The username to authenticate with the SDDC Manager.
-        required: true
-    sddc_manager_password:  
-        description:
-            - The password to authenticate with the SDDC Manager.
-        required: true  
-    state:
-        description:
-            - The state of the workload domain.
-        required: true
-        choices: ['create', 'delete', 'validate']
-    workload_domain_payload:
-        description:
-            - The payload for the workload domain.
-        required: true
-    license_key:
-        description:
-            - The license key for the workload domain.
-        required: true
-    nsx_license_key:
-        description:
-            - The NSX license key for the workload domain.
-        required: true  
-    vsan_license_key:   
-        description:
-            - The vSAN license key for the workload domain.
-        required: false 
-    hostsSpec:  
-        description:
-            - The hosts for the workload domain.
-        required: true  
-'''
 
 def main():
     parameters = dict(
