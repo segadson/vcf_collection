@@ -18,55 +18,6 @@ import logging
 import yaml
 
 #Todo Documentation
-DOCUMENTATION = '''
----
-module: cloud_builder_create_management_domain
-short_description: This module creates a management domain in Cloud Builder
-description:
-    - "This module is a wrapper around the Cloud Builder API. It creates a management domain in the SDDC."
-author:
-    - Your Name (@yourusername)
-options:
-    cloud_builder_ip:
-        description:
-            - The IP address of the Cloud Builder.
-        required: true
-        type: str
-    cloud_builder_user:
-        description:
-            - The username for the Cloud Builder.
-        required: true
-        type: str
-    cloud_builder_password:
-        description:
-            - The password for the Cloud Builder.
-        required: true
-        type: str
-    sddc_management_domain_payload:
-        description:
-            - The payload for the management domain.
-        required: true
-        type: dict
-requirements:
-    - python >= 3.6
-'''
-
-EXAMPLES = '''
-# How to use this module in your playbook
-- name: Create management domain
-  cloud_builder_create_management_domain:
-    cloud_builder_ip: "192.168.1.1"
-    cloud_builder_user: "admin"
-    cloud_builder_password: "password"
-    sddc_management_domain_payload: {"key": "value"}
-'''
-
-RETURN = '''
-management_domain:
-    description: The management domain that was created.
-    returned: always
-    type: dict
-'''
 
 def main():
     parameters = {
