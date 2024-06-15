@@ -17,71 +17,7 @@ import logging
 
 import yaml
 
-DOCUMENTATION = '''
----
-module: sddc_manager_nsxt_edge_cluster
-short_description: This module manages NSX-T Edge Clusters in SDDC Manager
-description:
-    - "This module is a wrapper around the SDDC Manager NSX-T Edge Clusters API. It allows to create, delete, and expand or shrink NSX-T Edge Clusters."
-author:
-    - Your Name (@yourusername)
-options:
-    sddc_manager_ip:
-        description:
-            - The IP address of the SDDC Manager.
-        required: true
-        type: str
-    sddc_manager_user:
-        description:
-            - The username for the SDDC Manager.
-        required: true
-        type: str
-    sddc_manager_password:
-        description:
-            - The password for the SDDC Manager.
-        required: true
-        type: str
-    edge_cluster_payload:
-        description:
-            - The payload for the Edge Cluster.
-        required: false
-        type: dict
-    validate:
-        description:
-            - Whether to validate the Edge Cluster.
-        required: false
-        type: bool
-        default: false
-    management_cluster_name:
-        description:
-            - The name of the management cluster.
-        required: false
-        type: str
-    state:
-        description:
-            - The state of the Edge Cluster. Choices are 'create', 'delete', 'expand_or_shrink'.
-        required: true
-        type: str
-requirements:
-    - python >= 3.6
-'''
-
-EXAMPLES = '''
-# How to use this module in your playbook
-- name: Manage NSX-T Edge Cluster
-  sddc_manager_nsxt_edge_cluster:
-    sddc_manager_ip: "192.168.1.1"
-    sddc_manager_user: "admin"
-    sddc_manager_password: "password"
-    state: "create"
-'''
-
-RETURN = '''
-edge_cluster:
-    description: The Edge Cluster that was created, deleted, or modified.
-    returned: always
-    type: dict
-'''
+#Todo Documentation
 
 def get_edge_cluster_by_name(sddc_manager_ip, sddc_manager_user, sddc_manager_password, edge_cluster_payload):
     edge_cluster_name = edge_cluster_payload['edgeClusterName']
