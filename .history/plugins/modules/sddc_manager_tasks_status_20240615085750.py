@@ -6,42 +6,7 @@ import sys
 # current_dir = os.path.dirname(os.path.realpath(__file__))
 # parent_dir = os.path.dirname(current_dir)
 # sys.path.append(parent_dir)
-DOCUMENTATION = '''
 
-module: sddc_manager_tasks_status
-short_description: Get the status of a task in SDDC Manager
-description:
-
-    - This module allows you to get the status of a task in SDDC Manager.
-version_added: "2.9"
-options:
-    sddc_manager_ip:
-        description:
-            - The IP address of the SDDC Manager.
-        required: true  
-    tasks_id:   
-        description:
-            - The ID of the task.
-        required: true
-    sddc_manager_user:
-        description:
-            - The username to authenticate with the SDDC Manager.
-        required: true
-    sddc_manager_password:
-        description:
-            - The password to authenticate with the SDDC Manager.
-        required: true
-    validation:
-        description:
-            - Whether to validate the task.
-        required: true
-        type: bool
-    sddc_manager_tasks_type:
-        description:
-            - The type of the task.
-        required: true  
-        choices: ['wld_domain', 'avns', 'clusters', 'cluster_datastore', 'hosts', 'nsxt_manager', 'nsxt_edge_cluster','sddc_upgrade']
-'''
 from ansible.module_utils.basic import *
 from ansible.module_utils.sddc_manager import SddcManagerApiClient
 from ansible.module_utils.exceptions import VcfAPIException
