@@ -113,7 +113,7 @@ def main():
         "cloud_builder_password": {"required": True, "type": "str"},
         "sddc_management_domain_payload": {"required": True, "type": "dict"}
     }
-
+    
     module = AnsibleModule(supports_check_mode=True,
                            argument_spec=parameters)
     
@@ -125,6 +125,7 @@ def main():
     #     module.fail_json(msg="sddc_management_domain_payload is required")
     # else:
     #     module.exit_json(changed=False, meta=sddc_management_domain_payload)
+
     try:
         api_client = CloudBuilderApiClient(cloud_builder_ip, cloud_builder_user, cloud_builder_password)
         managment_domain_validation = api_client.validate_sddc(json.dumps(sddc_management_domain_payload))
