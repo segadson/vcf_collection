@@ -41,31 +41,33 @@
   - debug:
       msg: "Creating Managment Domain"
 
-  # - name: Create SDDC Managment Domain 
-  #   cloud_builder_create_managment_domain:
-  #     cloud_builder_ip: "{{ cloud_builder_ip }}"
-  #     cloud_builder_user: "{{ cloud_builder_username }}"
-  #     cloud_builder_password: "{{ cloud_builder_password }}"
-  #     sddc_management_domain_payload: "{{ sddc_management_domain_payload }}"
-  #   register: result
+  - name: Create SDDC Managment Domain 
+    cloud_builder_create_managment_domain:
+      cloud_builder_ip: "{{ cloud_builder_ip }}"
+      cloud_builder_user: "{{ cloud_builder_username }}"
+      cloud_builder_password: "{{ cloud_builder_password }}"
+      sddc_management_domain_payload: "{{ sddc_management_domain_payload }}"
+    register: result
       
-  # - set_fact:
-  #     sddc_id: "{{ result.meta.id }}"
+  - set_fact:
+      sddc_id: "{{ result.meta.id }}"
   
-  # - debug:
-  #     msg: "SDDC Managment Domain ID: {{ sddc_id }}"
+  - debug:
+      msg: "SDDC Managment Domain ID: {{ sddc_id }}"
 
-  # - name: Wait Until SDDC Managment Domain is Completed
-  #   cloud_builder_managment_bring_up_status:
-  #     cloud_builder_ip: "{{ cloud_builder_ip }}"
-  #     cloud_builder_user: "{{ cloud_builder_username }}"
-  #     cloud_builder_password: "{{ cloud_builder_password }}"
-  #     sddc_id: "{{ sddc_id }}"
-  #   register: sddc_managment_domain
-  #   until: sddc_managment_domain.meta.status == "COMPLETED_WITH_SUCCESS" or sddc_managment_domain.meta.status == "COMPLETED_WITH_FAILURE"  
-  #   retries: 60
-  #   delay: 30
-  #   failed_when: sddc_managment_domain.meta.status == "COMPLETED_WITH_FAILURE"  
+  - name: Wait Until SDDC Managment Domain is Completed
+    cloud_builder_managment_bring_up_status:
+      cloud_builder_ip: "{{ cloud_builder_ip }}"
+      cloud_builder_user: "{{ cloud_builder_username }}"
+      cloud_builder_password: "{{ cloud_builder_password }}"
+      sddc_id: "{{ sddc_id }}"
+    register: sddc_managment_domain
+    until: sddc_managment_domain.meta.status == "COMPLETED_WITH_SUCCESS" or sddc_managment_domain.meta.status == "COMPLETED_WITH_FAILURE"  
+    retries: 60
+    delay: 30
+    failed_when:  sddc_managment_domain .meta.status == "COMPLETED_WITH_FAILURE"  
 
-  # - debug:
-  #     msg: "SDDC Managment Domain ID: {{ sddc_managment_domain.meta.id  }} Has Completed With Success"
+  - debug:
+      msg: "SDDC Managment Domain : {{ sddc_managment_domain.meta  }}"
+  - debug:
+      msg: "SDDC Managment Domain ID: {{ sddc_managment_domain.meta.id  }} Has Completed With Success"
