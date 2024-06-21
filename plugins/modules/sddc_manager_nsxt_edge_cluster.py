@@ -1,11 +1,4 @@
 #!/usr/bin/python
-import os
-import sys
-
-
-current_dir = os.path.dirname(os.path.realpath(__file__))
-parent_dir = os.path.dirname(current_dir)
-sys.path.append(parent_dir)
 
 from ansible.module_utils.basic import *
 from ansible.module_utils.sddc_manager import SddcManagerApiClient
@@ -193,3 +186,54 @@ def main():
     
 if __name__ == '__main__':
     main()
+
+
+
+
+# class WorkloadDomainManager:
+#     def __init__(self, module):
+#         self.module = module
+#         self.state = module.params['state']
+#         # Extract other necessary parameters and store them as needed
+
+#     def create(self):
+#         # Logic to create the workload domain
+#         pass
+
+#     def delete(self):
+#         # Logic to delete the workload domain
+#         pass
+
+#     def validate(self):
+#         # Logic to validate the workload domain configuration
+#         pass
+
+#     def run(self):
+#         if self.state == 'create':
+#             self.create()
+#         elif self.state == 'delete':
+#             self.delete()
+#         elif self.state == 'validate':
+#             self.validate()
+#         else:
+#             self.module.fail_json(msg=f"Unsupported state: {self.state}")
+
+# def main():
+#     parameters = {
+#         'sddc_manager_ip': {'type': 'str', 'required': True},
+#         'sddc_manager_user': {'type': 'str', 'required': True},
+#         'sddc_manager_password': {'type': 'str', 'required': True, 'no_log': True},
+#         'state': {'type': 'str', 'choices': ['create', 'delete', 'validate'], 'required': True},
+#         'workload_domain_payload': {'type': 'dict', 'required': True},
+#         'license_key': {'type': 'str', 'required': True},
+#         'nsx_license_key': {'type': 'str', 'required': True},
+#         'vsan_license_key': {'type': 'str', 'required': False},
+#         'hostsSpec': {'type': 'dict', 'required': True}
+#     }
+
+#     module = AnsibleModule(argument_spec=parameters, supports_check_mode=True)
+#     manager = WorkloadDomainManager(module)
+#     manager.run()
+
+# if __name__ == '__main__':
+#     main()
