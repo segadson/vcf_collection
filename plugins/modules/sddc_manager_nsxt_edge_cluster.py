@@ -178,6 +178,7 @@ def main():
         "validate": {"required": False, "type": "bool", "default": False},
         "management_cluster_name": {"required": False, "type": "str"},
         "state": {"required": True, "type": "str", "choices": ['create', 'delete', 'expand_or_shrink']}
+        
     }
 
     module = AnsibleModule(supports_check_mode=True,
