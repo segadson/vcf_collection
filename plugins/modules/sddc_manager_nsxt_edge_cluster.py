@@ -1,13 +1,6 @@
 #!/usr/bin/python
-import os
-import sys
 
-
-current_dir = os.path.dirname(os.path.realpath(__file__))
-parent_dir = os.path.dirname(current_dir)
-sys.path.append(parent_dir)
-
-from ansible.module_utils.basic import *
+from ansible.module_utils.basic import AnsibleModule
 from ansible.module_utils.sddc_manager import SddcManagerApiClient
 from ansible.module_utils.exceptions import VcfAPIException
 from datetime import datetime
@@ -82,18 +75,99 @@ edge_cluster:
     returned: always
     type: dict
 '''
+class EdgeClusterManager:
+    def __init__(self, module):
+        self.module = module
+        self.sddc_manager_ip = module.params['sddc_manager_ip']
+        self.sddc_manager_user = module.params['sddc_manager_user']
+        self.sddc_manager_password = module.params['sddc_manager_password']
+        self.state = module.params['state']
+        self.validate = module.params['validate']
+    #Functions
+    def get_host_cluster_by_name(self, management_cluster_name):
+        try:
+            api_client = SddcManagerApiClient(self.sddc_manager_ip, self.sddc_manager_user, self.sddc_manager_password)
+            api_response = api_client.get_clusters_all_clusters()
+            payload_data = api_response.data
+            for element in payload_data['elements']:
+                if element['name'] == management_cluster_name:
+                    return element
+        except VcfAPIException as e:
+            self.module.fail_json(msg=f"Error: {e}")
+    
+    def get_edge_cluster_by_name(self, edge_cluster_name):
+        try:
+            api_client = SddcManagerApiClient(self.sddc_manager_ip, self.sddc_manager_user, self.sddc_manager_password)
+            api_response = api_client.get_edge_clusters()
+            payload_data = api_response.data
+            for element in payload_data['elements']:
+                if element['name'] == edge_cluster_name:
+                    return element
+            return None
+        except VcfAPIException as e:
+            self.module.fail_json(msg=f"Error: {e}")
+    def create(self):
+        # Add Module Parameters
+        management_cluster_name = self.module.params['management_cluster_name']
+        edge_cluster_payload = self.module.params['edge_cluster_payload']
 
-def get_edge_cluster_by_name(sddc_manager_ip, sddc_manager_user, sddc_manager_password, edge_cluster_payload):
-    edge_cluster_name = edge_cluster_payload['edgeClusterName']
-    api_client = SddcManagerApiClient(sddc_manager_ip, sddc_manager_user, sddc_manager_password)
-    api_response = api_client.get_edge_clusters()
-    payload_data = api_response.data
-    for element in payload_data['elements']:
-        if element['name'] == edge_cluster_name:
-            return element
-    return None
+        host_cluster = self.get_host_cluster_by_name(management_cluster_name)
+        host_cluster_id = host_cluster['id']
+        for cluster in edge_cluster_payload['edgeNodeSpecs']:
+            cluster['clusterId'] = host_cluster_id
+        try:
+            api_client = SddcManagerApiClient(self.sddc_manager_ip, self.sddc_manager_user, self.sddc_manager_password)
+            api_response = api_client.create_edge_cluster(json.dumps(edge_cluster_payload))
+            payload_data = api_response.data
+            return payload_data
+        except VcfAPIException as e:
+            self.module.fail_json(msg=f"Error: {e}")
 
+    def validation(self):
+        # Add Module Parameters
+        management_cluster_name = self.module.params['management_cluster_name']
+        edge_cluster_payload = self.module.params['edge_cluster_payload']
 
+        host_cluster = self.get_host_cluster_by_name(management_cluster_name)
+        host_cluster_id = host_cluster['id']
+        for cluster in edge_cluster_payload['edgeNodeSpecs']:
+            cluster['clusterId'] = host_cluster_id
+        try:
+            api_client = SddcManagerApiClient(self.sddc_manager_ip, self.sddc_manager_user, self.sddc_manager_password)
+            api_response = api_client.validate_edge_cluster(json.dumps(edge_cluster_payload))
+            payload_data = api_response.data
+            return payload_data
+        except VcfAPIException as e:
+            self.module.fail_json(msg=f"Error: {e}")
+    def expand_or_shrink(self):
+        # Add Module Parameters
+        edge_cluster_name = self.module.params['edge_cluster_name']
+        edge_cluster_payload = self.module.params['edge_cluster_payload']   
+
+        edge_cluster = self.get_edge_cluster_by_name(edge_cluster_name)
+        edge_cluster_id = edge_cluster['id']
+        try:
+            api_client = SddcManagerApiClient(self.sddc_manager_ip, self.sddc_manager_user, self.sddc_manager_password)
+            api_response = api_client.expand_or_shrink_edge_cluster(edge_cluster_id, json.dumps(edge_cluster_payload))
+            payload_data = api_response.data
+            return payload_data
+        except VcfAPIException as e:
+            self.module.fail_json(msg=f"Error: {e}")
+    def run(self):
+        if self.state == 'create' and self.validate == False:
+            result = self.create()
+            self.module.exit_json(changed=True, meta=result)
+        elif self.state == 'create' and self.validate == True:
+            result = self.validation()
+            self.module.exit_json(changed=False, meta=result)
+        elif self.state == 'expand_or_shrink' and self.validate == False:
+            result = self.expand_or_shrink()
+            self.module.exit_json(changed=True, meta=result)
+        elif self.state == 'expand_or_shrink' and self.validate == True:
+            result = self.validation()
+            self.module.exit_json(changed=False, meta=result)
+        else:
+            self.module.fail_json(msg="Error: Invalid State")
 
 def main():
     parameters = {
@@ -104,92 +178,14 @@ def main():
         "validate": {"required": False, "type": "bool", "default": False},
         "management_cluster_name": {"required": False, "type": "str"},
         "state": {"required": True, "type": "str", "choices": ['create', 'delete', 'expand_or_shrink']}
+        
     }
 
     module = AnsibleModule(supports_check_mode=True,
                            argument_spec=parameters)
-    
-    sddc_manager_ip = module.params['sddc_manager_ip']
-    sddc_manager_user = module.params['sddc_manager_user']
-    sddc_manager_password = module.params['sddc_manager_password']
-    edge_cluster_payload = module.params['edge_cluster_payload']
-    validate = module.params['validate']
-    management_cluster_name = module.params['management_cluster_name']
-    state = module.params['state']
+    manager = EdgeClusterManager(module)
+    manager.run()
 
-    def get_host_cluster_by_name(sddc_manager_ip, sddc_manager_user, sddc_manager_password, management_cluster_name):
-        api_client = SddcManagerApiClient(sddc_manager_ip, sddc_manager_user, sddc_manager_password)
-        api_response = api_client.get_clusters_all_clusters()
-        payload_data = api_response.data
-        for element in payload_data['elements']:
-            if element['name'] == management_cluster_name:
-                return element
-        return None
-
-
-    def get_edge_cluster_by_name(sddc_manager_ip, sddc_manager_user, sddc_manager_password, edge_cluster_payload):
-        edge_cluster_name = edge_cluster_payload['edgeClusterName']
-        api_client = SddcManagerApiClient(sddc_manager_ip, sddc_manager_user, sddc_manager_password)
-        api_response = api_client.get_edge_clusters()
-        payload_data = api_response.data
-        for element in payload_data['elements']:
-            if element['name'] == edge_cluster_name:
-                return element
-        return None
-
-    if state == 'create' and validate == True:
-
-        #Add Cluster ID to Payload
-        current_state = get_host_cluster_by_name(sddc_manager_ip, sddc_manager_user, sddc_manager_password, management_cluster_name)
-        mgmt_cluster_id = current_state['id']
-        for cluster in edge_cluster_payload['edgeNodeSpecs']:
-            cluster['clusterId'] = mgmt_cluster_id
-        try:
-            api_client = SddcManagerApiClient(sddc_manager_ip, sddc_manager_user, sddc_manager_password)
-            api_response = api_client.validate_edge_cluster(json.dumps(edge_cluster_payload))
-            payload_data = api_response.data
-            module.exit_json(changed=False, meta=payload_data)
-        except VcfAPIException as e:
-            module.fail_json(msg=f"Error: {e}")
-
-    elif state == 'create' and validate == False:
-
-        #Add Cluster ID to Payload
-        current_state = get_host_cluster_by_name(sddc_manager_ip, sddc_manager_user, sddc_manager_password, management_cluster_name)
-        mgmt_cluster_id = current_state['id']
-        for cluster in edge_cluster_payload['edgeNodeSpecs']:
-            cluster['clusterId'] = mgmt_cluster_id
-        try:
-            api_client = SddcManagerApiClient(sddc_manager_ip, sddc_manager_user, sddc_manager_password)
-            api_response = api_client.create_edge_cluster(json.dumps(edge_cluster_payload))
-            payload_data = api_response.data
-            module.exit_json(changed=True, meta=payload_data)
-        except VcfAPIException as e:
-            module.fail_json(msg=f"Error: {e}")
-    elif state == 'expand_or_shrink' and validate == False:
-        current_state = get_edge_cluster_by_name(sddc_manager_ip, sddc_manager_user, sddc_manager_password, edge_cluster_payload['edgeClusterName'])
-        edge_cluster_id = current_state['id']
-        try:
-            api_client = SddcManagerApiClient(sddc_manager_ip, sddc_manager_user, sddc_manager_password)
-            api_response = api_client.expand_or_shrink_edge_cluster(edge_cluster_id, json.dumps(edge_cluster_payload))
-            payload_data = api_response.data
-            module.exit_json(changed=True, meta=payload_data)
-        except VcfAPIException as e:
-            module.fail_json(msg=f"Error: {e}")
-
-    elif state == 'expand_or_shrink' and validate == True:
-        current_state = get_edge_cluster_by_name(sddc_manager_ip, sddc_manager_user, sddc_manager_password, edge_cluster_payload['edgeClusterName'])
-        edge_cluster_id = current_state['id']
-        try:
-            api_client = SddcManagerApiClient(sddc_manager_ip, sddc_manager_user, sddc_manager_password)
-            api_response = api_client.validate_edge_cluster(edge_cluster_id, json.dumps(edge_cluster_payload))
-            payload_data = api_response.data
-            module.exit_json(changed=False, meta=payload_data)
-        except VcfAPIException as e:
-            module.fail_json(msg=f"Error: {e}")
-
-    else:
-        module.fail_json(msg="Error: Invalid State")
-    
 if __name__ == '__main__':
     main()
+
