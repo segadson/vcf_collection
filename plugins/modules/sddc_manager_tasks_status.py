@@ -62,6 +62,7 @@ class SddcManagerTaskProcessor:
         self.sddc_manager_password = module.params['sddc_manager_password']
         self.validation = module.params['validation']
         self.sddc_manager_tasks_type = module.params['sddc_manager_tasks_type']
+        self.api_client = SddcManagerApiClient(self.sddc_manager_ip, self.sddc_manager_user, self.sddc_manager_password)
 
     def evaluate_tasks_status(self, payload_data):
         if payload_data['status'] == 'FAILED':

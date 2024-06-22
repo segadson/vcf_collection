@@ -16,53 +16,56 @@
 - debug:
     msg: "Edge Cluster Validation ID: {{ edge_cluster_validation_id }}"
 
-# - name: Wait for Edge Cluster Validation to be ready
-#   sddc_manager_tasks_status:
-#     sddc_manager_ip: "{{ sddc_manager_ip }}"
-#     sddc_manager_user: "{{ sddc_manager_username }}"
-#     sddc_manager_password: "{{ sddc_manager_password }}"
-#     tasks_id: "{{ edge_cluster_validation_id }}"
-#     sddc_manager_tasks_type: nsxt_edge_cluster
-#     validation: True
-#   register: result
-#   until: result.meta.executionStatus == 'COMPLETED' or result.meta.resultStatus == "FAILED"
-#   retries: 60
-#   delay: 10
-#   failed_when: result.meta.resultStatus == "FAILED"
+- debug:
+    msg: "result: {{ result }}"
 
-# - debug:
-#     msg: "Creating NSX Edge Cluster"
+- name: Wait for Edge Cluster Validation to be ready
+  sddc_manager_tasks_status:
+    sddc_manager_ip: "{{ sddc_manager_ip }}"
+    sddc_manager_user: "{{ sddc_manager_username }}"
+    sddc_manager_password: "{{ sddc_manager_password }}"
+    tasks_id: "{{ edge_cluster_validation_id }}"
+    sddc_manager_tasks_type: nsxt_edge_cluster
+    validation: True
+  register: validation_result
+  until: validation_result.meta.executionStatus == 'COMPLETED' or validation_result.meta.resultStatus == "FAILED"
+  retries: 60
+  delay: 10
+  failed_when: validation_result.meta.resultStatus == "FAILED"
 
-# - name: Create Edge Cluster
-#   sddc_manager_nsxt_edge_cluster:
-#     sddc_manager_ip: "{{ sddc_manager_ip }}"
-#     sddc_manager_user: "{{ sddc_manager_username }}"
-#     sddc_manager_password: "{{ sddc_manager_password }}"
-#     management_cluster_name: "{{ management_cluster_name }}"
-#     edge_cluster_payload: "{{ edge_cluster_payload }}"
-#     state: create
-#     validate: False
-#   register: result
+- debug:
+    msg: "Creating NSX Edge Cluster"
+
+- name: Create Edge Cluster
+  sddc_manager_nsxt_edge_cluster:
+    sddc_manager_ip: "{{ sddc_manager_ip }}"
+    sddc_manager_user: "{{ sddc_manager_username }}"
+    sddc_manager_password: "{{ sddc_manager_password }}"
+    management_cluster_name: "{{ management_cluster_name }}"
+    edge_cluster_payload: "{{ edge_cluster_payload }}"
+    state: create
+    validate: False
+  register: creation_result
     
-# - set_fact:
-#     edge_cluster_id: "{{ result.meta.id }}"
+- set_fact:
+    edge_cluster_id: "{{ creation_result.meta.id }}"
 
-# - debug:
-#     msg: "Edge Cluster Creation ID: {{ edge_cluster_id }}"
+- debug:
+    msg: "Edge Cluster Creation ID: {{ edge_cluster_id }}"
 
-# - name: Wait for Edge Cluster to be ready
-#   sddc_manager_tasks_status:
-#     sddc_manager_ip: "{{ sddc_manager_ip }}"
-#     sddc_manager_user: "{{ sddc_manager_username }}"
-#     sddc_manager_password: "{{ sddc_manager_password }}"
-#     tasks_id: "{{ edge_cluster_id }}"
-#     sddc_manager_tasks_type: nsxt_edge_cluster
-#     validation: False
-#   register: result
-#   until: result.meta.status == 'Successful' or result.meta.status == 'Failed'
-#   retries: 60
-#   delay: 10
-#   failed_when: result.meta.status == "Failed"
+- name: Wait for Edge Cluster to be ready
+  sddc_manager_tasks_status:
+    sddc_manager_ip: "{{ sddc_manager_ip }}"
+    sddc_manager_user: "{{ sddc_manager_username }}"
+    sddc_manager_password: "{{ sddc_manager_password }}"
+    tasks_id: "{{ edge_cluster_id }}"
+    sddc_manager_tasks_type: nsxt_edge_cluster
+    validation: False
+  register: create_status
+  until: create_status.meta.status == 'Successful' or create_status.meta.status == 'Failed'
+  retries: 60
+  delay: 10
+  failed_when: create_status.meta.status == "Failed"
 
-# - debug:
-#     msg: "NSX Edge Cluster Created"
+- debug:
+    msg: "NSX Edge Cluster Created"
