@@ -23,11 +23,11 @@
     tasks_id: "{{ hosts_commission_validation_id }}"
     sddc_manager_tasks_type: hosts
     validation: True
-  register: result
-  until: result.meta.executionStatus == 'COMPLETED' result.meta.resultStatus == "FAILED" #change the key to read from
+  register: validation_result
+  until: validation_result.meta.executionStatus == 'COMPLETED' or validation_result.meta.executionStatus == "FAILED" #change the key to read from
   retries: 60
   delay: 10
-  failed_when: result.meta.resultStatus == "FAILED"
+  failed_when: validation_result.meta.resultStatus == "FAILED"
 
 - debug:
     msg: "Creating Host Commission"
@@ -40,10 +40,10 @@
     hosts_list_payload: "{{ hostsSpec }}"
     state: commission
     validate: False
-  register: result
+  register: creation_result
     
 - set_fact:
-    hosts_commission_id: "{{ result.meta.id }}"
+    hosts_commission_id: "{{ creation_result.meta.id }}"
 
 - debug:
     msg: "Host Commission Creation ID: {{ hosts_commission_id }}"
@@ -56,11 +56,11 @@
     tasks_id: "{{ hosts_commission_id }}"
     sddc_manager_tasks_type: hosts
     validation: False
-  register: result
-  until: result.meta.status == 'Successful' or result.meta.status == 'Failed'
+  register: create_status
+  until: create_status.meta.status == 'Successful' or create_status.meta.status == 'Failed'
   retries: 60
   delay: 10
-  failed_when: result.meta.status == "Failed"
+  failed_when: create_status.meta.status == "Failed"
 
 - debug:
     msg: "Host Commission Created"

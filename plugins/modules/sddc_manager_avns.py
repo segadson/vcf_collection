@@ -138,18 +138,9 @@ class SDDCManagerAVNS:
         self.avns_payload['edgeClusterId'] = edge_cluster_id
 
         if self.operation == 'create':
-            try:
-                payload_data = self.create_avns()
-                self.module.exit_json(changed=True, meta=payload_data)
-            except Exception as e:
-                self.module.fail_json(msg=f"Error: {e}")
+            return self.create_avns()
         elif self.operation == 'validate':
-            try:
-                payload_data = self.validate_avns()
-                self.module.exit_json(changed=True, meta=payload_data)
-            except Exception as e:
-                self.module.fail_json(msg=f"Error: {e}")
-
+            return self.validate_avns()
 def main():
     parameters = dict(
         sddc_manager_ip=dict(type='str', required=True),
@@ -162,7 +153,11 @@ def main():
 
     module = AnsibleModule(argument_spec=parameters, supports_check_mode=True)
     sddc_manager_avns = SDDCManagerAVNS(module)
-    sddc_manager_avns.run()
+    try:
+        payload_data = sddc_manager_avns.run()
+        module.exit_json(changed=True, meta=payload_data)
+    except VcfAPIException as e:
+        module.fail_json(msg=f"Error: {e}")
 
 if __name__ == '__main__':
     main()
