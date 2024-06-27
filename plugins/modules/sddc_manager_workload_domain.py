@@ -64,57 +64,41 @@ options:
         required: true  
 '''
 
-def main():
-    parameters = dict(
-    sddc_manager_ip=dict(type='str', required=True),
-    sddc_manager_user=dict(type='str', required=True),
-    sddc_manager_password=dict(type='str', required=True, no_log=True),
-    state=dict(type='str', choices=['create', 'delete', 'validate'], required=True),
-    workload_domain_payload=dict(type='dict', required=True),
-    license_key=dict(type='str', required=True),
-    nsx_license_key=dict(type='str', required=True),
-    vsan_license_key=dict(type='str', required=False),
-    hostsSpec=dict(type='dict', required=True)
-)
+class SddcManagerWorkloadDomain:
+    def __init__(self, module):
+        self.module = module
+        self.sddc_manager_ip = module.params['sddc_manager_ip']
+        self.sddc_manager_user = module.params['sddc_manager_user']
+        self.sddc_manager_password = module.params['sddc_manager_password']
+        self.workload_domain_payload = module.params['workload_domain_payload']
+        self.license_key = module.params['license_key']
+        self.nsx_license_key = module.params['nsx_license_key']
+        self.vsan_license_key = module.params['vsan_license_key']
+        self.hostsSpec = module.params['hostsSpec']
+        self.state = module.params['state']
+        self.api_client = SddcManagerApiClient(self.sddc_manager_ip, self.sddc_manager_user, self.sddc_manager_password)
 
-    module = AnsibleModule(supports_check_mode=True,
-                           argument_spec=parameters)
-    
-    sddc_manager_ip = module.params['sddc_manager_ip']
-    sddc_manager_user = module.params['sddc_manager_user']
-    sddc_manager_password = module.params['sddc_manager_password']
-    workload_domain_payload = module.params['workload_domain_payload']
-    license_key = module.params['license_key']
-    nsx_license_key = module.params['nsx_license_key']
-    vsan_license_key = module.params['vsan_license_key']
-    hostsSpec = module.params['hostsSpec']
-    state = module.params['state']
-
-    
-
-    def get_host_by_name(sddc_manager_ip, sddc_manager_user, sddc_manager_password, name):
+    def get_host_by_name(self, name):
         try:
-            api_client = SddcManagerApiClient(sddc_manager_ip, sddc_manager_user, sddc_manager_password)
-            api_response = api_client.get_all_hosts()
+            api_response = self.api_client.get_all_hosts()
             payload_data = api_response.data
             for element in payload_data['elements']:
                 if element['fqdn'] == name:
                     return element
         except Exception as e:
-            module.fail_json(msg="Failed to get host by name: " + str(e))
+            self.module.fail_json(msg="Failed to get host by name: " + str(e))
 
-    #Todo: Clean This up
-    def create_workload_domain_payload(workload_domain_payload, hostsSpec):
-        clusters = workload_domain_payload['computeSpec']['clusterSpecs']
+    def create_workload_domain_payload(self):
+        clusters = self.workload_domain_payload['computeSpec']['clusterSpecs']
         host_specs = []
         for cluster_specs in clusters:
             host_network_spec = cluster_specs['hostNetworkSpec']
-            for host in hostsSpec['hosts']:
+            for host in self.hostsSpec['hosts']:
                 host
                 host_name = host['fqdn']
-                host_data = get_host_by_name(sddc_manager_ip, sddc_manager_user, sddc_manager_password, host_name)
+                host_data = self.get_host_by_name(host_name)
                 host['id'] = host_data['id']
-                host['licenseKey'] = license_key
+                host['licenseKey'] = self.license_key
                 host_spec = {}
                 host_spec['id'] = host['id']
                 host_spec['licenseKey'] = host['licenseKey']
@@ -122,10 +106,10 @@ def main():
                 host_specs.append(host_spec)
             cluster_specs['hostSpecs'] = host_specs
             #This is for vSAN CLusters will need to update for vVol, NFS, etc
-            cluster_specs['datastoreSpec']['vsanDatastoreSpec']['licenseKey'] = vsan_license_key
-        return workload_domain_payload
+            cluster_specs['datastoreSpec']['vsanDatastoreSpec']['licenseKey'] = self.vsan_license_key
+        return self.workload_domain_payload
 
-    def evaluate_response(data):
+    def evaluate_response(self, data):
         output = {}
         if data['resultStatus'] == 'FAILED':
             for check in data['validationChecks']:
@@ -136,64 +120,77 @@ def main():
         else:
             output['message'] = "Successful"
         return output
-
-
-    if state == 'validate':
-        updated_workload_domain_payload = create_workload_domain_payload(workload_domain_payload, hostsSpec)
-        updated_workload_domain_payload['nsxTSpec']['licenseKey'] = nsx_license_key
-        if "hostNetworkSpec" in workload_domain_payload:
-            del workload_domain_payload["hostNetworkSpec"]
-
-        try:
-            api_client = SddcManagerApiClient(sddc_manager_ip, sddc_manager_user, sddc_manager_password)
-            api_response = api_client.validate_domains(json.dumps(updated_workload_domain_payload))
-            payload_data = api_response.data
-            response = evaluate_response(payload_data)
-            if response['message'] == "Successful":
-                module.exit_json(changed=False, meta=payload_data)
-            else:
-                module.fail_json(msg="Workload Domain Validation Has Failed", meta=response)
-        except Exception as e:
-            module.fail_json(msg="Failed to validate workload domain: " + str(e))
-    elif state == 'create':
-        updated_workload_domain_payload = create_workload_domain_payload(workload_domain_payload, hostsSpec)
-        updated_workload_domain_payload['nsxTSpec']['licenseKey'] = nsx_license_key
-        if "hostNetworkSpec" in workload_domain_payload:
-            del workload_domain_payload["hostNetworkSpec"]
-        try:
-            api_client = SddcManagerApiClient(sddc_manager_ip, sddc_manager_user, sddc_manager_password)
-            api_response = api_client.create_domains(json.dumps(updated_workload_domain_payload))
-            payload_data = api_response.data
-            module.exit_json(changed=True, meta=payload_data)
-        except Exception as e:
-            module.fail_json(msg="Failed to create workload domain", exception=str(e), stdout=e.stdout if hasattr(e, 'stdout') else None, stderr=e.stderr if hasattr(e, 'stderr') else None)
-    elif state == 'update':
-        updated_workload_domain_payload = create_workload_domain_payload(workload_domain_payload, hostsSpec)
-        updated_workload_domain_payload['nsxTSpec']['licenseKey'] = nsx_license_key
-        if "hostNetworkSpec" in workload_domain_payload:
-            del workload_domain_payload["hostNetworkSpec"]
-        try:
-            api_client = SddcManagerApiClient(sddc_manager_ip, sddc_manager_user, sddc_manager_password)
-            api_response = api_client.update_domains(json.dumps(updated_workload_domain_payload))
-            payload_data = api_response.data
-            module.exit_json(changed=True, meta=payload_data)
-        except:
-            module.fail_json(msg="Failed to update workload domain")
-    elif state == 'delete':
-        '''
-        To do:
-        - Add Check for any VMs on clusters
-        - Check for remote Datastores
-        - Auto migrate VMs to other clusters in a different domain? 
-        '''
-        try:
-            api_client = SddcManagerApiClient(sddc_manager_ip, sddc_manager_user, sddc_manager_password)
-            api_response = api_client.delete_domains(json.dumps(updated_workload_domain_payload))
-            payload_data = api_response.data
-            module.exit_json(changed=True, meta=payload_data)
-        except:
-            module.fail_json(msg="Failed to delete workload domain")
     
+    def validate_workload_domain(self):
+        updated_workload_domain_payload = self.create_workload_domain_payload()
+        updated_workload_domain_payload['nsxTSpec']['licenseKey'] = self.nsx_license_key
+        if "hostNetworkSpec" in self.workload_domain_payload:
+            del self.workload_domain_payload["hostNetworkSpec"]
+        try:
+            api_response = self.api_client.validate_domains(json.dumps(updated_workload_domain_payload))
+            payload_data = api_response.data
+            response = self.evaluate_response(payload_data)
+            if response['message'] == "Successful":
+                return payload_data
+            else:
+                return response
+        except VcfAPIException as e:
+            self.module.fail_json(msg=f"Error: {e}")
+
+    def create_workload_domain(self):
+        updated_workload_domain_payload = self.create_workload_domain_payload()
+        updated_workload_domain_payload['nsxTSpec']['licenseKey'] = self.nsx_license_key
+        if "hostNetworkSpec" in self.workload_domain_payload:
+            del self.workload_domain_payload["hostNetworkSpec"]
+        
+        try:
+            api_response = self.api_client.create_domains(json.dumps(updated_workload_domain_payload))
+            payload_data = api_response.data
+            return payload_data
+        except VcfAPIException as e:
+            self.module.fail_json(msg=f"Error: {e}")
+
+    def delete_workload_domain(self):
+        '''
+        To Do:
+        check for VMs on clusters
+        '''
+        try:
+            api_response = self.api_client.delete_domains(json.dumps(self.workload_domain_payload))
+            payload_data = api_response.data
+            return payload_data
+        except VcfAPIException as e:
+            self.module.fail_json(msg=f"Error: {e}")
+
+    def run(self):
+        if self.state == 'validate':
+            result = self.validate_workload_domain()
+            self.module.exit_json(changed=False, meta=result)
+        elif self.state == 'create':
+            result = self.create_workload_domain()
+            self.module.exit_json(changed=True, meta=result)
+        elif self.state == 'delete':
+            result = self.delete_workload_domain()
+            self.module.exit_json(changed=True, meta=result)
+        else:
+            self.module.fail_json(msg="Not Valid Action")
+
+def main():
+    parameters = dict(
+        sddc_manager_ip=dict(required=True, type='str'),
+        sddc_manager_user=dict(required=True, type='str'),
+        sddc_manager_password=dict(required=True, type='str'),
+        workload_domain_payload=dict(required=True, type='dict'),
+        license_key=dict(required=True, type='str'),
+        nsx_license_key=dict(required=True, type='str'),
+        vsan_license_key=dict(required=False, type='str'),
+        hostsSpec=dict(required=True, type='dict'),
+        state=dict(required=True, choices=['create', 'delete', 'validate'])
+    )
+
+    module = AnsibleModule(supports_check_mode=True, argument_spec=parameters)
+    workload_domain = SddcManagerWorkloadDomain(module)
+    workload_domain.run()
+
 if __name__ == '__main__':
     main()
-

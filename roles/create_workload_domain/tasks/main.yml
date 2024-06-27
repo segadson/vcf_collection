@@ -28,13 +28,13 @@
     hostsSpec: "{{ hostsSpec }}"
     state: "create"
     workload_domain_payload: "{{ workload_domain_payload }}"
-  register: result
+  register: creation_result
 
 - debug:
-    msg: "Workload Domain Creation Status: {{ result }}"
+    msg: "Workload Domain Creation Status: {{ creation_result }}"
 
 - set_fact:
-    workload_domain_id: "{{ result.meta.id }}"
+    workload_domain_id: "{{ creation_result.meta.id }}"
 
 - debug:
     msg: "Workload Domain Creation ID: {{ workload_domain_id }}"
@@ -48,11 +48,11 @@
     tasks_id: c8667384-7db4-4752-8d09-993e046fc5e0
     sddc_manager_tasks_type: wld_domain
     validation: False
-  register: result
-  until: result.meta.status == 'Successful' or result.meta.status == 'Failed'
+  register: create_status
+  until: create_status.meta.status == 'Successful' or create_status.meta.status == 'Failed'
   retries: 60
   delay: 10
-  failed_when: result.meta.status == "Failed"
+  failed_when: create_status.meta.status == "Failed"
 
 - debug:
     msg: "Workload Domain Created"
