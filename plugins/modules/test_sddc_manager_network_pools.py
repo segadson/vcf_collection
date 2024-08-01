@@ -57,19 +57,35 @@ class TestSddcManagerNetworkPools(unittest.TestCase):
         mock_create.assert_called_once()
         self.module.exit_json.assert_called_once_with(changed=True, meta={'id': '123'})
 
+    @patch.object(SddcManagerNetworkPools, 'get_network_pool_id_by_name', return_value={'id': '123'})
     @patch.object(SddcManagerNetworkPools, 'network_pools_update', return_value={'id': '123'})
-    def test_run_update(self, mock_update):
+    def test_run_update(self, mock_update, mock_get_network_pool_id_by_name):
         self.sddc_manager.state = 'update'
         self.sddc_manager.run()
+        
+        # Verify that get_network_pool_id_by_name was called once
+        mock_get_network_pool_id_by_name.assert_called_once()
+        
+        # Verify that network_pools_update was called once
         mock_update.assert_called_once()
+        
+        # Verify that exit_json was called with the expected arguments
         self.module.exit_json.assert_called_once_with(changed=True, meta={'id': '123'})
 
+    @patch.object(SddcManagerNetworkPools, 'get_network_pool_id_by_name', return_value={'id': '123'})
     @patch.object(SddcManagerNetworkPools, 'network_pools_delete', return_value={'id': '123'})
-    def test_run_delete(self, mock_delete):
+    def test_run_delete(self, mock_delete, mock_get_network_pool_id_by_name):
         self.sddc_manager.state = 'delete'
         self.sddc_manager.run()
+        
+        # Verify that get_network_pool_id_by_name was called once
+        mock_get_network_pool_id_by_name.assert_called_once()
+        
+        # Verify that network_pools_delete was called once
         mock_delete.assert_called_once()
-        self.module.exit_json.assert_called_once_with(changed=False, meta={'id': '123'})
+        
+        # Verify that exit_json was called with the expected arguments
+        self.module.exit_json.assert_called_once_with(changed=True, meta={'id': '123'})
 
     def test_run_invalid_state(self):
         self.sddc_manager.state = 'invalid'
