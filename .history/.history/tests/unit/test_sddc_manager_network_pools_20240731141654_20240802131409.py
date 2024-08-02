@@ -1,6 +1,6 @@
 import pytest
 from unittest.mock import Mock, patch
-from ansible_collections.vmware.vcf.plugins.moduleutils.basic import AnsibleModule
+from ansible_collections.vmware.vcf.plugins.module_utils.basic import AnsibleModule
 from plugins.modules.sddc_manager_nsxt_edge_cluster import EdgeClusterManager, VcfAPIException
 
 class AnsibleExitJson(Exception):

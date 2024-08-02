@@ -10,8 +10,8 @@
 import json
 import unittest
 from unittest.mock import patch, MagicMock
-from ansible_collections.vmware.vcf.plugins.moduleutils import basic
-from ansible_collections.vmware.vcf.plugins.moduleutils.common.text.converters import to_bytes
+from ansible_collections.vmware.vcf.plugins.module_utils import basic
+from ansible_collections.vmware.vcf.plugins.module_utils.common.text.converters import to_bytes
 from sddc_manager_network_pools import SddcManagerNetworkPools, VcfAPIException
 
 

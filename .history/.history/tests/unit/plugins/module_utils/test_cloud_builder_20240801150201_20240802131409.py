@@ -5,8 +5,8 @@ import json
 import pytest
 
 from unittest.mock import MagicMock
-from ansible_collections.vmware.vcf.plugins.moduleutils import cloud_builder
-from ansible_collections.vmware.vcf.plugins.moduleutils.exceptions import VcfAPIException
+from ansible_collections.vmware.vcf.plugins.module_utils import cloud_builder
+from ansible_collections.vmware.vcf.plugins.module_utils.exceptions import VcfAPIException
 
 
 class ModuleFailException(Exception):

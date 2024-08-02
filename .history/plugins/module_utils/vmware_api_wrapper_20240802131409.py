@@ -12,8 +12,8 @@ import json
 from json import JSONDecodeError
 import logging
 from typing import List, Dict
-from ansible_collections.vmware.vcf.plugins.moduleutils.exceptions import VcfAPIException
-from ansible_collections.vmware.vcf.plugins.moduleutils.outputs import Result
+from ansible_collections.vmware.vcf.plugins.module_utils.exceptions import VcfAPIException
+from ansible_collections.vmware.vcf.plugins.module_utils.outputs import Result
 
 class VsphereApiWrapper:
     def __init__(self, vcenter_host: str, vcenter_username: str, vcenter_password: str):

@@ -1,7 +1,7 @@
 import pytest
-from ansible_collections.vmware.vcf.plugins.moduleutils.basic import AnsibleModule
+from ansible_collections.vmware.vcf.plugins.module_utils.basic import AnsibleModule
 from units.modules.utils import set_module_args
-from ansible_collections.vmware.vcf.plugins.moduleutils.common.text.converters import to_bytes
+from ansible_collections.vmware.vcf.plugins.module_utils.common.text.converters import to_bytes
 
 class AnsibleExitJson(Exception):
     def __init__(self, kwargs):
@@ -19,5 +19,5 @@ def fail_json(*args, **kwargs):
 
 @pytest.fixture
 def patch_ansible_module(mocker):
-    mocker.patch('ansible_collections.vmware.vcf.plugins.moduleutils.basic.AnsibleModule.exit_json', side_effect=exit_json)
-    mocker.patch('ansible_collections.vmware.vcf.plugins.moduleutils.basic.AnsibleModule.fail_json', side_effect=fail_json)
+    mocker.patch('ansible_collections.vmware.vcf.plugins.module_utils.basic.AnsibleModule.exit_json', side_effect=exit_json)
+    mocker.patch('ansible_collections.vmware.vcf.plugins.module_utils.basic.AnsibleModule.fail_json', side_effect=fail_json)

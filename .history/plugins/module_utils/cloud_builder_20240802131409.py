@@ -12,8 +12,8 @@ import json
 from json import JSONDecodeError
 import logging
 from typing import List, Dict
-from ansible_collections.vmware.vcf.plugins.moduleutils.exceptions import VcfAPIException
-from ansible_collections.vmware.vcf.plugins.moduleutils.outputs import Result
+from ansible_collections.vmware.vcf.plugins.module_utils.exceptions import VcfAPIException
+from ansible_collections.vmware.vcf.plugins.module_utils.outputs import Result
 # from urllib3.exceptions import InsecureRequestWarning
 # requests.urllib3.disable_warnings(category=InsecureRequestWarning)
 class CloudBuilderApiClient:

@@ -2,7 +2,7 @@
 import sys
 sys.path.append('/home/segadson/vcf/ansible_vcf/plugins')
 
-from ansible_collections.vmware.vcf.plugins.moduleutils.basic import *
+from ansible_collections.vmware.vcf.plugins.module_utils.basic import *
 from module_utils.sddc_manager import SddcManagerApiClient
 from module_utils.exceptions import VcfAPIException
 from datetime import datetime

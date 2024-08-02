@@ -2,8 +2,8 @@ import json
 
 from units.compat import unittest
 from units.compat.mock import patch
-from ansible_collections.vmware.vcf.plugins.moduleutils import basic
-from ansible_collections.vmware.vcf.plugins.moduleutils.common.text.converters import to_bytes
+from ansible_collections.vmware.vcf.plugins.module_utils import basic
+from ansible_collections.vmware.vcf.plugins.module_utils.common.text.converters import to_bytes
 from sddc_manager_network_pools import SddcManagerNetworkPools, VcfAPIException
 
 def set_module_args(args):

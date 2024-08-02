@@ -12,8 +12,8 @@ import json
 from json import JSONDecodeError
 import logging
 from typing import List, Dict, Optional
-from ansible_collections.vmware.vcf.plugins.moduleutils.exceptions import VcfAPIException
-from ansible_collections.vmware.vcf.plugins.moduleutils.outputs import Result
+from ansible_collections.vmware.vcf.plugins.module_utils.exceptions import VcfAPIException
+from ansible_collections.vmware.vcf.plugins.module_utils.outputs import Result
 
 class SddcManagerApiClient:
     """
