@@ -5,4 +5,4 @@ import json
 import pytest
 
 from unittest.mock import MagicMock
-from ansible_collections.vmware.vcf.plugins.module__utils import cloud_builder
+from ansible_collections.vmware.vcf.plugins.module_utils import cloud_builder

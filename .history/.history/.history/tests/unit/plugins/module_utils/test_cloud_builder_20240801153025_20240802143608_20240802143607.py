@@ -4,11 +4,9 @@ __metaclass__ = type
 import json
 import pytest
 
-from unittest.mock import MagicMock, patch
-from ansible_collections.vmware.vcf.plugins.module_utils.cloud_builder import CloudBuilderApiClient
-from ansible_collections.vmware.vcf.plugins.module_utils.exceptions import VcfAPIException
-from ansible_collections.vmware.vcf.plugins.module_utils import basic
-from ansible_collections.vmware.vcf.plugins.module_utils.common.text.converters import to_bytes
+from unittest.mock import MagicMock
+from ansible_collections.vmware.vcf.plugins.module__utils.cloud_builder import CloudBuilderApiClient
+from ansible_collections.vmware.vcf.plugins.module__utils.exceptions import VcfAPIException
 
 
 class ModuleFailException(Exception):
