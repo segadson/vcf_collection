@@ -17,7 +17,7 @@ from ansible.module_utils.common.text.converters import to_bytes
 
 from ansible_collections.vmware.vcf.plugins.module_utils.cloud_builder import CloudBuilderApiClient
 from ansible_collections.vmware.vcf.plugins.module_utils.exceptions import VcfAPIException
-from ansible_collections.vmware.vcf.plugins.module.cloud_builder_create_management_domain import cloud_builder_create_managment_domain
+from ansible_collections.vmware.vcf.plugins.module_.cloud_builder_create_management_domain import cloud_builder_create_managment_domain
 
 
 

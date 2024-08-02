@@ -14,6 +14,7 @@ from unittest.mock import MagicMock, patch
 from urllib.parse import urlencode
 from ansible.module_utils import basic
 from ansible.module_utils.common.text.converters import to_bytes
+from ansible.modules.namespace import my_module
 
 from ansible_collections.vmware.vcf.plugins.module_utils.cloud_builder import CloudBuilderApiClient
 from ansible_collections.vmware.vcf.plugins.module_utils.exceptions import VcfAPIException
