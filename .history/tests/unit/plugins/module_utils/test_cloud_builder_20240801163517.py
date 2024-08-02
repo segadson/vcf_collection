@@ -1,7 +1,6 @@
 import json
 import pytest
 from unittest.mock import MagicMock, patch
-from urllib.parse import urlencode
 from ansible.module_utils.cloud_builder import CloudBuilderApiClient
 from ansible.module_utils.exceptions import VcfAPIException
 from ansible.modules.cloud_builder_create_management_domain import cloud_builder_create_managment_domain
