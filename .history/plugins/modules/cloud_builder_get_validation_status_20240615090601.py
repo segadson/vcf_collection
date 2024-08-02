@@ -8,9 +8,9 @@ import sys
 # parent_dir = os.path.dirname(current_dir)
 # sys.path.append(parent_dir)
 
-from ansible.module_utils.basic import *
-from ansible.module_utils.cloud_builder import CloudBuilderApiClient
-from ansible.module_utils.exceptions import VcfAPIException
+from ansible_collections.vmware.vcf.plugins.moduleutils.basic import *
+from ansible_collections.vmware.vcf.plugins.moduleutils.cloud_builder import CloudBuilderApiClient
+from ansible_collections.vmware.vcf.plugins.moduleutils.exceptions import VcfAPIException
 from datetime import datetime
 import time
 import json

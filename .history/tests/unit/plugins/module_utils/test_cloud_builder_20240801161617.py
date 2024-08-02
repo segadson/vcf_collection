@@ -1,11 +1,11 @@
 import json
 import pytest
 from unittest.mock import MagicMock, patch
-from ansible.module_utils.cloud_builder import CloudBuilderApiClient
-from ansible.module_utils.exceptions import VcfAPIException
+from ansible_collections.vmware.vcf.plugins.moduleutils.cloud_builder import CloudBuilderApiClient
+from ansible_collections.vmware.vcf.plugins.moduleutils.exceptions import VcfAPIException
 from ansible.modules.cloud_builder_create_management_domain import cloud_builder_create_managment_domain
-from ansible.module_utils import basic
-from ansible.module_utils.common.text.converters import to_bytes
+from ansible_collections.vmware.vcf.plugins.moduleutils import basic
+from ansible_collections.vmware.vcf.plugins.moduleutils.common.text.converters import to_bytes
 
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
