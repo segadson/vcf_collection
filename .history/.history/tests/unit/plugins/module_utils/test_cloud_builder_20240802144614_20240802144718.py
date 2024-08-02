@@ -18,7 +18,7 @@ from ansible.modules.namespace import my_module
 
 from ansible_collections.vmware.vcf.plugins.module_utils.cloud_builder import CloudBuilderApiClient
 from ansible_collections.vmware.vcf.plugins.module_utils.exceptions import VcfAPIException
-from ansible_collections.vmware.vcf.plugins.module.cloud_builder_create_management_domain import cloud_builder_create_managment_domain
+from ansible_collections.vmware.vcf.plugins.modules.cloud_builder_create_management_domain import cloud_builder_create_managment_domain
 
 
 

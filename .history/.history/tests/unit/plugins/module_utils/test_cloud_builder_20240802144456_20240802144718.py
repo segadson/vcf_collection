@@ -14,7 +14,7 @@ from unittest.mock import MagicMock, patch
 from urllib.parse import urlencode
 from ansible_collections.vmware.vcf.plugins.module_utils.cloud_builder import CloudBuilderApiClient
 from ansible_collections.vmware.vcf.plugins.module_utils.exceptions import VcfAPIException
-from ansible_collections.vmware.vcf.plugins.module.cloud_builder_create_management_domain import cloud_builder_create_managment_domain
+from ansible_collections.vmware.vcf.plugins.modules.cloud_builder_create_management_domain import cloud_builder_create_managment_domain
 from ansible_collections.vmware.vcf.plugins.module_utils import basic
 from ansible_collections.vmware.vcf.plugins.module_utils.common.text.converters import to_bytes
 

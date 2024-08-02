@@ -42,7 +42,7 @@ options:
         required: true  
         choices: ['wld_domain', 'avns', 'clusters', 'cluster_datastore', 'hosts', 'nsxt_manager', 'nsxt_edge_cluster','sddc_upgrade']
 '''
-from ansible_collections.vmware.vcf.plugins.module_utils.basic import *
+from ansible.module_utils import basic
 from ansible_collections.vmware.vcf.plugins.module_utils.sddc_manager import SddcManagerApiClient
 from ansible_collections.vmware.vcf.plugins.module_utils.exceptions import VcfAPIException
 from datetime import datetime

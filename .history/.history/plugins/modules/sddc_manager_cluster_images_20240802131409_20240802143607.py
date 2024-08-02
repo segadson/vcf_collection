@@ -7,7 +7,7 @@ current_dir = os.path.dirname(os.path.realpath(__file__))
 parent_dir = os.path.dirname(current_dir)
 sys.path.append(parent_dir)
 
-from ansible_collections.vmware.vcf.plugins.module_utils.basic import *
+from ansible.module_utils import basic
 from module_utils.sddc_manager import SddcManagerApiClient
 from module_utils.exceptions import VcfAPIException
 from datetime import datetime
