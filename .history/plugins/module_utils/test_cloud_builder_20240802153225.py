@@ -76,7 +76,7 @@ class TestCloudBuilderApiClient:
     def test_module_fail_when_required_args_missing(self):
         with self.assertRaises(AnsibleFailJson):
             set_module_args({})
-            cloud_builder_create_managment_domain.main()
+            cloud_builder_create_management_domain.main()
 
     def test_create_management_domain(self):
         set_module_args({
@@ -421,7 +421,7 @@ class TestCloudBuilderApiClient:
             }
             }
             with self.assertRaises(AnsibleExitJson) as result:
-                cloud_builder_create_managment_domain.main()
+                cloud_builder_create_management_domain.main()
             self.assertFalse(result.exception.args[0]['changed'])
 
             mock_create_sddc.assert_called_once_with({
