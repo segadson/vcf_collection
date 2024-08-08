@@ -51,7 +51,7 @@ class TestCloudBuilderApiClient(TestCase):
         self.mock_module_helper.start()
         self.addCleanup(self.mock_module_helper.stop)
 
-    @patch.object(CloudBuilderApiClient, 'create_sddc', new_callable=MagicMock)
+    @patch('ansible_collections.vmware.vcf.plugins.module_utils.cloud_builder.CloudBuilderApiClient.create_sddc')
     def test_create_management_domain(self, MockCreateSddc):
         mock_instance = MockCreateSddc.return_value
         mock_instance.create_sddc.return_value = {

@@ -9,6 +9,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../../../../../../li
 
 import json
 import pytest
+import unittest
 from unittest import TestCase
 from unittest.mock import MagicMock, patch
 from urllib.parse import urlencode
@@ -17,7 +18,7 @@ from ansible.module_utils.common.text.converters import to_bytes
 
 from ansible_collections.vmware.vcf.plugins.module_utils.cloud_builder import CloudBuilderApiClient
 from ansible_collections.vmware.vcf.plugins.module_utils.exceptions import VcfAPIException
-from ansible_collections.vmware.vcf.plugins.modules.cloud_builder_create_management_domain import cloud_builder_create_management_domain  # Corrected import statement
+
 
 class ModuleFailException(Exception):
     def __init__(self, msg, **kwargs):
@@ -76,7 +77,7 @@ class TestCloudBuilderApiClient:
     def test_module_fail_when_required_args_missing(self):
         with self.assertRaises(AnsibleFailJson):
             set_module_args({})
-            cloud_builder_create_management_domain.main()
+            cloud_builder_create_managment_domain.main()
 
     def test_create_management_domain(self):
         set_module_args({
@@ -421,7 +422,7 @@ class TestCloudBuilderApiClient:
             }
             }
             with self.assertRaises(AnsibleExitJson) as result:
-                cloud_builder_create_management_domain.main()
+                cloud_builder_create_managment_domain.main()
             self.assertFalse(result.exception.args[0]['changed'])
 
             mock_create_sddc.assert_called_once_with({

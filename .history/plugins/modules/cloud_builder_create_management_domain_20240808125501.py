@@ -95,7 +95,8 @@ def main():
         print(f"API Client Created: {api_client}")
         result = api_client.create_sddc(json.dumps(sddc_management_domain_payload))
         
-        print(f"Result: {result.data}")
+        print(f"Result: {result}")
+        
         payload_data = result.data
         module.exit_json(changed=False, meta=payload_data)
     

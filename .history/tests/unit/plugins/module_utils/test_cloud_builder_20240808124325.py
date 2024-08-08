@@ -51,7 +51,7 @@ class TestCloudBuilderApiClient(TestCase):
         self.mock_module_helper.start()
         self.addCleanup(self.mock_module_helper.stop)
 
-    @patch.object(CloudBuilderApiClient, 'create_sddc', new_callable=MagicMock)
+    @patch('ansible_collections.vmware.vcf.plugins.module_utils.cloud_builder.CloudBuilderApiClient.create_sddc')
     def test_create_management_domain(self, MockCreateSddc):
         mock_instance = MockCreateSddc.return_value
         mock_instance.create_sddc.return_value = {
@@ -90,16 +90,11 @@ class TestCloudBuilderApiClient(TestCase):
             }
         })
 
-        print(f"mock instance: {mock_instance}")
         with self.assertRaises(AnsibleExitJson) as result:
             cloud_builder_create_management_domain.main()
         
-        # Debugging statement to check if create_sddc was called
-        print(f"create_sddc called: {mock_instance.create_sddc.called}")
-        
         mock_instance.create_sddc.assert_called_once()
         self.assertEqual(result.exception.args[0]['message'], "Created")
-
 
 if __name__ == '__main__':
     unittest.main()

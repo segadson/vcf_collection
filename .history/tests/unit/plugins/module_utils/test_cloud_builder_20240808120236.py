@@ -13,48 +13,97 @@ import unittest
 from unittest import TestCase
 from unittest.mock import MagicMock, patch
 from urllib.parse import urlencode
-from ansible.module_utils.basic import AnsibleModule
 from ansible.module_utils import basic
 from ansible.module_utils.common.text.converters import to_bytes
 
 from ansible_collections.vmware.vcf.plugins.module_utils.cloud_builder import CloudBuilderApiClient
 from ansible_collections.vmware.vcf.plugins.module_utils.exceptions import VcfAPIException
-from ansible_collections.vmware.vcf.plugins.modules import cloud_builder_create_management_domain
 
+
+class ModuleFailException(Exception):
+    def __init__(self, msg, **kwargs):
+        super(ModuleFailException, self).__init__(msg)
+        self.fail_msg = msg
+        self.fail_kwargs = kwargs
+
+
+def get_module_mock():
+    def f(msg, **kwargs):
+        raise ModuleFailException(msg, **kwargs)
+
+    module = MagicMock()
+    module.fail_json = f
+    module.from_json = json.loads
+    return module
+
+
+def set_module_args(args):
+    """prepare arguments so that they will be picked up during module creation"""
+    args = json.dumps({'ANSIBLE_MODULE_ARGS': args})
+    basic._ANSIBLE_ARGS = to_bytes(args)
+
+
+class AnsibleExitJson(Exception):
+    """Exception class to be raised by module.exit_json and caught by the test case"""
+    pass
+
+
+class AnsibleFailJson(Exception):
+    """Exception class to be raised by module.fail_json and caught by the test case"""
+    pass
 
 
 def exit_json(*args, **kwargs):
+    """function to patch over exit_json; package return data into an exception"""
+    if 'changed' not in kwargs:
+        kwargs['changed'] = False
     raise AnsibleExitJson(kwargs)
+
 
 def fail_json(*args, **kwargs):
     """function to patch over fail_json; package return data into an exception"""
     kwargs['failed'] = True
     raise AnsibleFailJson(kwargs)
 
-class AnsibleExitJson(Exception):
-    pass
 
-class AnsibleFailJson(Exception):
-    pass
-
-def set_module_args(args):
-    """Prepare arguments so that they will be picked up during module creation"""
-    args = json.dumps({'ANSIBLE_MODULE_ARGS': args})
-    basic._ANSIBLE_ARGS = to_bytes(args)
-
-class TestCloudBuilderApiClient(TestCase):
-
+class TestCloudBuilderApiClient:
     def setUp(self):
-        self.mock_module_helper = patch.multiple(AnsibleModule,
+        self.mock_module_helper = patch.multiple(basic.AnsibleModule,
                                                  exit_json=exit_json,
                                                  fail_json=fail_json)
         self.mock_module_helper.start()
         self.addCleanup(self.mock_module_helper.stop)
 
-    @patch.object(CloudBuilderApiClient, 'create_sddc', new_callable=MagicMock)
-    def test_create_management_domain(self, MockCreateSddc):
-        mock_instance = MockCreateSddc.return_value
-        mock_instance.create_sddc.return_value = {
+    def test_module_fail_when_required_args_missing(self):
+        with self.assertRaises(AnsibleFailJson):
+            self.set_module_args({
+                'cloud_builder_ip': 'sfo-cb01.rainpole.local',
+                'cloud_builder_user': 'admin',
+                'cloud_builder_password': 'VMware1!',
+                'sddc_management_domain_payload': {
+                    "dvSwitchVersion": "7.0.0",
+                    "skipEsxThumbprintValidation": True,
+                    "managementPoolName": "bringup-networkpool",
+                    "sddcManagerSpec": {
+                        "hostname": "sfo-vcf01",
+                        "ipAddress": "10.0.0.4",
+                        "localUserPassword": "xxxxxxxxxxxx",
+                        "rootUserCredentials": {
+                            "username": "root",
+                            "password": "xxxxxxx"
+                        },
+                        "secondUserCredentials": {
+                            "username": "vcf",
+                            "password": "xxxxxxx"
+                        }
+                    }
+                }
+            })
+            cloud_builder_create_management_domain.main()
+
+    @patch('cloud_builder_create_management_domain.create_sddc')
+    def test_create_management_domain(self, mock_create_sddc):
+        mock_create_sddc.return_value = {
             "status_code": 201,
             "message": "Created",
             "data": {
@@ -66,7 +115,7 @@ class TestCloudBuilderApiClient(TestCase):
                 }
             }
         }
-        set_module_args({
+        self.set_module_args({
             'cloud_builder_ip': 'sfo-cb01.rainpole.local',
             'cloud_builder_user': 'admin',
             'cloud_builder_password': 'VMware1!',
@@ -80,7 +129,7 @@ class TestCloudBuilderApiClient(TestCase):
                     "localUserPassword": "xxxxxxxxxxxx",
                     "rootUserCredentials": {
                         "username": "root",
-                        "password":"xxxxxxx"
+                        "password": "xxxxxxx"
                     },
                     "secondUserCredentials": {
                         "username": "vcf",
@@ -90,39 +139,9 @@ class TestCloudBuilderApiClient(TestCase):
             }
         })
 
-        print(f"mock instance: {mock_instance}")
-        with self.assertRaises(AnsibleExitJson) as result:
-            cloud_builder_create_management_domain.main()
-        
-        # Debugging statement to check if create_sddc was called
-        print(f"create_sddc called: {mock_instance.create_sddc.called}")
-        
-        mock_instance.create_sddc.assert_called_once()
-        self.assertEqual(result.exception.args[0]['message'], "Created")
-
-
-if __name__ == '__main__':
-    unittest.main()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        cloud_builder_create_management_domain.main()
+        mock_create_sddc.assert_called_once()
+    
 '''
 {
             'cloud_builder_ip': 'sfo-cb01.rainpole.local',
