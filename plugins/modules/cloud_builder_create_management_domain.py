@@ -92,10 +92,8 @@ def main():
 
     try:
         api_client = CloudBuilderApiClient(cloud_builder_ip, cloud_builder_user, cloud_builder_password)
-        print(f"API Client Created: {api_client}")
         result = api_client.create_sddc(json.dumps(sddc_management_domain_payload))
         
-        print(f"Result: {result}")
         payload_data = result['data']
         module.exit_json(changed=False,
                          status_code=result['status_code'], 
@@ -103,7 +101,7 @@ def main():
                          meta=payload_data)
     
     except VcfAPIException as e:
-        module.fail_json(msg=f"Error: {e}")
+        module.fail_json(msg=f"Error: {e}", status_code=e.status_code)
 
 if __name__ == '__main__':
     main()

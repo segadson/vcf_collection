@@ -5,6 +5,7 @@ import sys
 
 
 
+from ansible.module_utils.basic import AnsibleModule
 from ansible.module_utils import basic
 from ansible_collections.vmware.vcf.plugins.module_utils.cloud_builder import CloudBuilderApiClient
 from ansible_collections.vmware.vcf.plugins.module_utils.exceptions import VcfAPIException
@@ -125,14 +126,23 @@ def main():
     #     module.fail_json(msg="sddc_management_domain_payload is required")
     # else:
     #     module.exit_json(changed=False, meta=sddc_management_domain_payload)
+    print(f"Parameters: {module.params}")
+
+    print("Inside Main Function")
 
     try:
         api_client = CloudBuilderApiClient(cloud_builder_ip, cloud_builder_user, cloud_builder_password)
-        managment_domain_validation = api_client.validate_sddc(json.dumps(sddc_management_domain_payload))
-        payload_data = managment_domain_validation.data
-        module.exit_json(changed=False, meta=payload_data)
+        result = api_client.validate_sddc(json.dumps(sddc_management_domain_payload))
+
+        print(f"Result: {result}")
+        payload_data = result['data']
+        module.exit_json(changed=False,
+                         status_code=result['status_code'], 
+                         message=result['message'], 
+                         meta=payload_data)
+    
     except VcfAPIException as e:
-        module.fail_json(msg=f"Error: {e}")
+        module.fail_json(msg=f"Error: {e}", status_code=e.status_code)
 
 if __name__ == '__main__':
     main()
