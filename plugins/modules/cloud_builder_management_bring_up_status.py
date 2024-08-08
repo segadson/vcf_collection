@@ -7,6 +7,7 @@ import sys
 # parent_dir = os.path.dirname(current_dir)
 # sys.path.append(parent_dir)
 
+from ansible.module_utils.basic import AnsibleModule
 from ansible.module_utils import basic
 from ansible_collections.vmware.vcf.plugins.module_utils.cloud_builder import CloudBuilderApiClient
 from ansible_collections.vmware.vcf.plugins.module_utils.exceptions import VcfAPIException

@@ -1,5 +1,6 @@
 #!/usr/bin/python
 
+from ansible.module_utils.basic import AnsibleModule
 from ansible_collections.vmware.vcf.plugins.module_utils.basic import AnsibleModule
 from ansible_collections.vmware.vcf.plugins.module_utils.sddc_manager import SddcManagerApiClient
 from ansible_collections.vmware.vcf.plugins.module_utils.exceptions import VcfAPIException

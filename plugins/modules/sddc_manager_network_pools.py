@@ -2,6 +2,7 @@
 import sys
 sys.path.append('/home/segadson/vcf/ansible_vcf/plugins')
 
+from ansible.module_utils.basic import AnsibleModule
 from ansible.module_utils import basic
 from module_utils.sddc_manager import SddcManagerApiClient
 from module_utils.exceptions import VcfAPIException
