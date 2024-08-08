@@ -51,10 +51,9 @@ class TestCloudBuilderApiClient(TestCase):
         self.mock_module_helper.start()
         self.addCleanup(self.mock_module_helper.stop)
 
-    @patch.object(CloudBuilderApiClient, 'create_sddc', new_callable=MagicMock)
+    @patch('ansible_collections.vmware.vcf.plugins.module_utils.cloud_builder.CloudBuilderApiClient.create_sddc')
     def test_create_management_domain(self, MockCreateSddc):
-        mock_instance = MockCreateSddc.return_value
-        mock_instance.create_sddc.return_value = {
+        MockCreateSddc.return_value = {
             "status_code": 201,
             "message": "Created",
             "data": {
@@ -67,64 +66,6 @@ class TestCloudBuilderApiClient(TestCase):
             }
         }
         set_module_args({
-            'cloud_builder_ip': 'sfo-cb01.rainpole.local',
-            'cloud_builder_user': 'admin',
-            'cloud_builder_password': 'VMware1!',
-            'sddc_management_domain_payload': {
-                "dvSwitchVersion": "7.0.0",
-                "skipEsxThumbprintValidation": True,
-                "managementPoolName": "bringup-networkpool",
-                "sddcManagerSpec": {
-                    "hostname": "sfo-vcf01",
-                    "ipAddress": "10.0.0.4",
-                    "localUserPassword": "xxxxxxxxxxxx",
-                    "rootUserCredentials": {
-                        "username": "root",
-                        "password":"xxxxxxx"
-                    },
-                    "secondUserCredentials": {
-                        "username": "vcf",
-                        "password": "xxxxxxx"
-                    }
-                }
-            }
-        })
-
-        print(f"mock instance: {mock_instance}")
-        with self.assertRaises(AnsibleExitJson) as result:
-            cloud_builder_create_management_domain.main()
-        
-        # Debugging statement to check if create_sddc was called
-        print(f"create_sddc called: {mock_instance.create_sddc.called}")
-        
-        mock_instance.create_sddc.assert_called_once()
-        self.assertEqual(result.exception.args[0]['message'], "Created")
-
-
-if __name__ == '__main__':
-    unittest.main()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-'''
-{
             'cloud_builder_ip': 'sfo-cb01.rainpole.local',
             'cloud_builder_user': 'admin',
             'cloud_builder_password': 'VMware1!',
@@ -450,5 +391,27 @@ if __name__ == '__main__':
                     }
                 ]
             }
-        }
-'''
+        })
+
+        print(f"mock instance: {MockCreateSddc}")
+        with self.assertRaises(Exception) as result:
+            cloud_builder_create_management_domain.main()
+        
+        # Debugging statement to check if create_sddc was called
+        print(f"create_sddc called: {MockCreateSddc.called}")
+        
+        MockCreateSddc.assert_called_once()
+        
+        # Debugging statement to print the exception args
+        print(f"Exception args: {result.exception.args[0]}")
+        
+        # Check the actual keys in the exception args
+        self.assertIn('status_code', result.exception.args[0])
+        self.assertEqual(result.exception.args[0]['status_code'], 201)
+        
+        # Accessing data from the result dictionary
+        payload_data = result.exception.args[0]['meta']
+        print(f"Payload Data: {payload_data}")
+
+if __name__ == '__main__':
+    unittest.main()

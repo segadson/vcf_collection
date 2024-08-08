@@ -95,9 +95,12 @@ def main():
         print(f"API Client Created: {api_client}")
         result = api_client.create_sddc(json.dumps(sddc_management_domain_payload))
         
-        print(f"Result: {result.data}")
-        payload_data = result.data
-        module.exit_json(changed=False, meta=payload_data)
+        print(f"Result: {result}")
+        payload_data = result['data']
+        module.exit_json(changed=False,
+                         status_code=result['status_code'], 
+                         message=result['message'], 
+                         meta=payload_data)
     
     except VcfAPIException as e:
         module.fail_json(msg=f"Error: {e}")
