@@ -6,13 +6,15 @@
     sddc_manager_password: "{{ sddc_manager_password }}"
     hosts_list_payload: "{{ hostsSpec }}"
     state: commission
-    validate: True
+    validate: true
   register: result
-    
-- set_fact:
+
+- name: Set Host Commission Validation ID
+  ansible.builtin.set_fact:
     hosts_commission_validation_id: "{{ result.meta.id }}"
 
-- debug:
+- name: Debug Host Commission Validation ID
+  ansible.builtin.debug:
     msg: "Host Commission Validation ID: {{ hosts_commission_validation_id }}"
 
 - name: Wait for Host Commission Validation to be ready
@@ -22,30 +24,31 @@
     sddc_manager_password: "{{ sddc_manager_password }}"
     tasks_id: "{{ hosts_commission_validation_id }}"
     sddc_manager_tasks_type: hosts
-    validation: True
+    validation: true
   register: validation_result
-  until: validation_result.meta.executionStatus == 'COMPLETED' or validation_result.meta.executionStatus == "FAILED" #change the key to read from
+  until: validation_result.meta.executionStatus == 'COMPLETED' or validation_result.meta.executionStatus == "FAILED"  # change the key to read from
   retries: 60
   delay: 10
   failed_when: validation_result.meta.resultStatus == "FAILED"
-
-- debug:
+- name: Debug Creating Host Commission
+  ansible.builtin.debug:
     msg: "Creating Host Commission"
 
-- name: Create Host Commission
-  sddc_manager_host_commisson:
-    sddc_manager_ip: "{{ sddc_manager_ip }}"
-    sddc_manager_user: "{{ sddc_manager_username }}"
-    sddc_manager_password: "{{ sddc_manager_password }}"
-    hosts_list_payload: "{{ hostsSpec }}"
-    state: commission
-    validate: False
+- name: Commission Hosts
+  sddc_manager_ip: "{{ sddc_manager_ip }}"
+  sddc_manager_user: "{{ sddc_manager_username }}"
+  sddc_manager_password: "{{ sddc_manager_password }}"
+  hosts_list_payload: "{{ hostsSpec }}"
+  state: commission
+  validate: false
   register: creation_result
-    
-- set_fact:
+
+- name: Set Host Commission ID
+  ansible.builtin.set_fact:
     hosts_commission_id: "{{ creation_result.meta.id }}"
 
-- debug:
+- name: Debug Host Commission Creation ID
+  ansible.builtin.debug:
     msg: "Host Commission Creation ID: {{ hosts_commission_id }}"
 
 - name: Wait for Host Commission to be ready
@@ -55,12 +58,13 @@
     sddc_manager_password: "{{ sddc_manager_password }}"
     tasks_id: "{{ hosts_commission_id }}"
     sddc_manager_tasks_type: hosts
-    validation: False
+    validation: false
   register: create_status
   until: create_status.meta.status == 'Successful' or create_status.meta.status == 'Failed'
   retries: 60
   delay: 10
   failed_when: create_status.meta.status == "Failed"
 
-- debug:
+- name: Debug Host Commission Created
+  ansible.builtin.debug:
     msg: "Host Commission Created"
